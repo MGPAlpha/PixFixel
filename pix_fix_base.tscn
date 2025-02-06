@@ -1,0 +1,162 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3fgccwg7pmwj"]
+
+[ext_resource type="Theme" uid="uid://sb07yqf6yvfw" path="res://PixFixTheme.tres" id="1_y2x87"]
+[ext_resource type="Script" path="res://TabDisplay.gd" id="2_6eru2"]
+[ext_resource type="Script" path="res://ApplicationMenu.gd" id="2_khr37"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_xio3m"]
+
+[node name="PixFix Base" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_y2x87")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuBar" type="MenuBar" parent="VBoxContainer"]
+layout_mode = 2
+script = ExtResource("2_khr37")
+
+[node name="File" type="PopupMenu" parent="VBoxContainer/MenuBar"]
+item_count = 3
+item_0/text = "Open"
+item_1/text = "Save As"
+item_1/id = 1
+item_2/text = "Save"
+item_2/id = 2
+
+[node name="OpenDialog" type="FileDialog" parent="VBoxContainer/MenuBar"]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(521, 400)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.jpg", "*.jpeg", "*.png")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ToolSelector" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ToolSelector"]
+layout_mode = 2
+text = "Tools
+"
+
+[node name="VScrollBar" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/ToolSelector"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ToolList" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/ToolSelector/VScrollBar"]
+layout_mode = 2
+
+[node name="Crop Button" type="Button" parent="VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_xio3m")
+text = "Crop
+"
+alignment = 0
+
+[node name="Downscale Button" type="Button" parent="VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_xio3m")
+text = "Downscale"
+alignment = 0
+
+[node name="Fix Palette Button" type="Button" parent="VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_xio3m")
+text = "Fix Palette"
+alignment = 0
+
+[node name="TabDisplay" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_6eru2")
+
+[node name="TabBar" type="TabBar" parent="VBoxContainer/HBoxContainer/TabDisplay"]
+layout_mode = 2
+current_tab = 0
+tab_close_display_policy = 1
+tab_count = 2
+tab_0/title = "Tab1"
+tab_1/title = "Tab2"
+
+[node name="TabDisplayWindow" type="Control" parent="VBoxContainer/HBoxContainer/TabDisplay"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tab1Window" type="Control" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab1Window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab1Window/CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab1Window/CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"HeaderLarge"
+text = "Welcome to PixFixel"
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab1Window/CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Open File"
+
+[node name="Tab2Window" type="Control" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab2Window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab2Window/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(794, 578)
+render_target_update_mode = 0
+
+[node name="ToolSettingsDisplay" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[connection signal="file_selected" from="VBoxContainer/MenuBar/OpenDialog" to="VBoxContainer/MenuBar" method="open_file"]
