@@ -25,4 +25,4 @@ func on_open():
 	file_picker.visible = true
 
 func open_file(path: String):
-	print("opening file", path)
+	PFApplication.get_singleton().open_file(path)
