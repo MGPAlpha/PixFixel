@@ -1,4 +1,4 @@
-extends Control
+class_name TabDisplay extends Control
 
 class EditorTab extends RefCounted:
 	var name:String
@@ -15,6 +15,18 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func add_tab(window: Node, name: String):
+	var new_tab = EditorTab.new()
+	new_tab.name = name
+	new_tab.control = window
+	
+	$TabBar.add_tab(name)
+	$TabDisplayWindow.add_child(window)
+	var newTabIndex = $TabBar.tab_count - 1
+	$TabBar.current_tab = newTabIndex
+	$TabBar.ensure_tab_visible(newTabIndex)
+	select_tab(newTabIndex)
 
 func select_tab(i: int) -> void:
 	for child in $TabDisplayWindow.get_children():

@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://dcj3tqbv0fetl"]
+
+[ext_resource type="Script" path="res://EditorWindow.gd" id="1_un5d2"]
+[ext_resource type="Texture2D" uid="uid://whlxsf5wcbky" path="res://icon.svg" id="2_cos3o"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ft750"]
+
+[node name="EditorWindow" type="SubViewportContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+script = ExtResource("1_un5d2")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewport"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewport"]
+material = SubResource("CanvasItemMaterial_ft750")
+texture = ExtResource("2_cos3o")

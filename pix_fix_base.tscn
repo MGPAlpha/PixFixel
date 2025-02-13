@@ -6,7 +6,7 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_xio3m"]
 
-[node name="PixFix Base" type="Node"]
+[node name="PFApplication" type="Node"]
 script = ExtResource("1_ibu74")
 
 [node name="Main Window" type="Panel" parent="."]
@@ -21,8 +21,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 318.0
-offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -99,9 +97,8 @@ layout_mode = 2
 current_tab = 0
 tab_close_display_policy = 1
 drag_to_rearrange_enabled = true
-tab_count = 2
+tab_count = 1
 tab_0/title = "Tab1"
-tab_1/title = "Tab2"
 
 [node name="TabDisplayWindow" type="Control" parent="Main Window/VBoxContainer/HBoxContainer/TabDisplay"]
 layout_mode = 2
@@ -136,21 +133,6 @@ text = "Welcome to PixFixel"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Open File"
-
-[node name="Tab2Window" type="SubViewportContainer" parent="Main Window/VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="Main Window/VBoxContainer/HBoxContainer/TabDisplay/TabDisplayWindow/Tab2Window"]
-handle_input_locally = false
-size = Vector2i(1112, 608)
-render_target_update_mode = 0
 
 [node name="ToolSettingsDisplay" type="Control" parent="Main Window/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(250, 0)
