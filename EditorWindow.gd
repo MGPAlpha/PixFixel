@@ -26,15 +26,17 @@ func incremental_zoom_toward(amount: float, toward: Vector2) -> void:
 	zoom = zoom * amount
 	scene_camera.zoom = Vector2(zoom, zoom)
 	# TODO handle zoom repositioning
-	# TODO bug: zoom occurs in all tabs, not just open one
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 	
-func _input(event):
+func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			incremental_zoom_toward(1.03, event.position)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			incremental_zoom_toward(0.97, event.position)
+
+#func _input(event):
+	
