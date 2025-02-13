@@ -22,10 +22,14 @@ func zoom_to_fit() -> void:
 	scene_camera.zoom = Vector2(zoom, zoom)
 	
 func incremental_zoom_toward(amount: float, toward: Vector2) -> void:
-	var zoom = scene_camera.zoom.y
-	zoom = zoom * amount
-	scene_camera.zoom = Vector2(zoom, zoom)
-	# TODO handle zoom repositioning
+	var cam_zoom = scene_camera.zoom.y
+	cam_zoom = cam_zoom * amount
+	var mouse_world_pos = scene_camera.get_canvas_transform().affine_inverse() * toward
+	var offset_initial = mouse_world_pos - scene_camera.position
+	var offset_final = offset_initial * amount
+	var offset_diff = offset_final - offset_initial
+	scene_camera.position += offset_diff
+	scene_camera.zoom = Vector2(cam_zoom, cam_zoom)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
