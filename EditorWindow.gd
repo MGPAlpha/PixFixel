@@ -7,6 +7,8 @@ var texture: ImageTexture
 @onready var scene_camera = $SubViewport/Camera2D
 @onready var viewport = $SubViewport
 
+var _pan_dragging = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -28,8 +30,12 @@ func incremental_zoom_toward(amount: float, toward: Vector2) -> void:
 	var offset_initial = mouse_world_pos - scene_camera.position
 	var offset_final = offset_initial * amount
 	var offset_diff = offset_final - offset_initial
-	scene_camera.position += offset_diff
 	scene_camera.zoom = Vector2(cam_zoom, cam_zoom)
+	scene_camera.position += offset_diff
+
+func pan_camera(amount: Vector2):
+	var world_amount = scene_camera.get_canvas_transform().affine_inverse().basis_xform(amount)
+	scene_camera.position -= world_amount
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -41,6 +47,15 @@ func _gui_input(event: InputEvent) -> void:
 			incremental_zoom_toward(1.03, event.position)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			incremental_zoom_toward(0.97, event.position)
+		if event.button_index == MOUSE_BUTTON_MIDDLE:
+			if event.pressed:
+				_pan_dragging = true
+			else:
+				_pan_dragging = false
+			
+	if event is InputEventMouseMotion:
+		if _pan_dragging:
+			pan_camera(event.relative)
 
 #func _input(event):
 	
