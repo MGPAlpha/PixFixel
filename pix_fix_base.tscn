@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://c3fgccwg7pmwj"]
+[gd_scene load_steps=8 format=3 uid="uid://c3fgccwg7pmwj"]
 
 [ext_resource type="Script" path="res://PFApplication.gd" id="1_ibu74"]
 [ext_resource type="Script" path="res://TabDisplay.gd" id="2_6eru2"]
 [ext_resource type="Script" path="res://PFMenu.gd" id="2_khr37"]
+[ext_resource type="PackedScene" uid="uid://ctyymg4oirnrx" path="res://UIBlocks/tool_pick_button.tscn" id="3_3qwrt"]
+[ext_resource type="PackedScene" uid="uid://c8djhc6qwkrng" path="res://UIBlocks/Tools/crop_tool_window.tscn" id="4_k61p4"]
+[ext_resource type="Script" path="res://ToolOptionsDisplay.gd" id="5_4i2nj"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_xio3m"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_sholv"]
 
 [node name="PFApplication" type="Node"]
 script = ExtResource("1_ibu74")
@@ -65,27 +68,10 @@ horizontal_scroll_mode = 0
 [node name="ToolList" type="VBoxContainer" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar"]
 layout_mode = 2
 
-[node name="Crop Button" type="Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
+[node name="Crop Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList" instance=ExtResource("3_3qwrt")]
 layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_xio3m")
-text = "Crop
-"
-alignment = 0
-
-[node name="Downscale Button" type="Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_xio3m")
-text = "Downscale"
-alignment = 0
-
-[node name="Fix Palette Button" type="Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList"]
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_xio3m")
-text = "Fix Palette"
-alignment = 0
+button_group = SubResource("ButtonGroup_sholv")
+tool_window_scene = ExtResource("4_k61p4")
 
 [node name="TabDisplay" type="VBoxContainer" parent="Main Window/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -134,8 +120,17 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Open File"
 
-[node name="ToolSettingsDisplay" type="Control" parent="Main Window/VBoxContainer/HBoxContainer"]
+[node name="ToolOptionsDisplay" type="VBoxContainer" parent="Main Window/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+script = ExtResource("5_4i2nj")
+
+[node name="Label" type="Label" parent="Main Window/VBoxContainer/HBoxContainer/ToolOptionsDisplay"]
+layout_mode = 2
+text = "Tool Options"
+
+[node name="ToolOptionsDisplayWindow" type="Control" parent="Main Window/VBoxContainer/HBoxContainer/ToolOptionsDisplay"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [connection signal="file_selected" from="Main Window/VBoxContainer/MenuBar/OpenDialog" to="Main Window/VBoxContainer/MenuBar" method="open_file"]

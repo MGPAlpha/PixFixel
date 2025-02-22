@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctyymg4oirnrx"]
+
+[ext_resource type="Script" path="res://ToolPickButton.gd" id="1_gnnt2"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_xio3m"]
+
+[node name="Crop Button" type="Button"]
+toggle_mode = true
+button_group = SubResource("ButtonGroup_xio3m")
+text = "Crop
+"
+alignment = 0
+script = ExtResource("1_gnnt2")

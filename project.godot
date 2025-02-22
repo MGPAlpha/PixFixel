@@ -25,4 +25,4 @@ window/subwindows/embed_subwindows=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-fft-ff38272110c5cb2029b4d0ed6738005b5b3365be/plugin.cfg", "res://addons/godot-fft/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-fft/plugin.cfg")

@@ -1,5 +1,13 @@
 class_name TabDisplay extends Control
 
+static var _singleton: TabDisplay
+static func get_singleton() -> TabDisplay:
+	return _singleton
+	
+func _init() -> void:
+	_singleton = self
+
+
 class EditorTab extends RefCounted:
 	var name:String
 	var control:Node
