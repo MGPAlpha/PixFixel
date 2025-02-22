@@ -11,5 +11,3 @@ func _init(_path: String) -> void:
 	name = _path.get_file()
 	image = Image.new()
 	image.load(_path)
-	
-	print(image.get_width())

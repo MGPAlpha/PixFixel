@@ -15,6 +15,14 @@ run/main_scene="res://pix_fix_base.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+FFT="*res://addons/godot-fft/Fft.gd"
+
 [display]
 
 window/subwindows/embed_subwindows=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-fft-ff38272110c5cb2029b4d0ed6738005b5b3365be/plugin.cfg", "res://addons/godot-fft/plugin.cfg")
