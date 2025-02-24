@@ -9,7 +9,7 @@ func _init() -> void:
 
 @onready var tool_window = $ToolOptionsDisplayWindow
 
-var active_tool = null
+var active_tool: ToolWindowBase = null
 
 var tool_windows: Dictionary
 
@@ -29,6 +29,8 @@ func add_tool(name: String, window: Control):
 func select_tool(name: String):
 	print("Selecting tool", name)
 	if active_tool != null:
-		tool_window.remove_child(tool_windows[active_tool])
-	tool_window.add_child(tool_windows[name])
-	active_tool = name
+		tool_window.remove_child(active_tool)
+	active_tool = tool_windows[name]
+	tool_window.add_child(active_tool)
+	active_tool.reset_tool()
+	

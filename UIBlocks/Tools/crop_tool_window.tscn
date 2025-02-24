@@ -17,24 +17,24 @@ text = "Size"
 [node name="Size Controls" type="HFlowContainer" parent="."]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Size Controls"]
+[node name="WidthContainer" type="HBoxContainer" parent="Size Controls"]
 layout_mode = 2
 
-[node name="Width" type="Label" parent="Size Controls/HBoxContainer"]
+[node name="Width" type="Label" parent="Size Controls/WidthContainer"]
 layout_mode = 2
 text = "Width:"
 
-[node name="WidthBox" type="SpinBox" parent="Size Controls/HBoxContainer"]
+[node name="WidthBox" type="SpinBox" parent="Size Controls/WidthContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Size Controls"]
+[node name="HeightContainer" type="HBoxContainer" parent="Size Controls"]
 layout_mode = 2
 
-[node name="Height" type="Label" parent="Size Controls/HBoxContainer2"]
+[node name="Height" type="Label" parent="Size Controls/HeightContainer"]
 layout_mode = 2
 text = "Height:"
 
-[node name="HeightBox" type="SpinBox" parent="Size Controls/HBoxContainer2"]
+[node name="HeightBox" type="SpinBox" parent="Size Controls/HeightContainer"]
 layout_mode = 2
 
 [node name="Margins" type="Label" parent="."]
@@ -49,56 +49,63 @@ columns = 3
 [node name="Dummy" type="Control" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Margin Controls"]
+[node name="TopContainer" type="VBoxContainer" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="Top" type="Label" parent="Margin Controls/VBoxContainer"]
+[node name="Top" type="Label" parent="Margin Controls/TopContainer"]
 layout_mode = 2
 text = "Top
 "
 
-[node name="TopBox" type="SpinBox" parent="Margin Controls/VBoxContainer"]
+[node name="TopBox" type="SpinBox" parent="Margin Controls/TopContainer"]
 layout_mode = 2
 
 [node name="Dummy2" type="Control" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Margin Controls"]
+[node name="LeftContainer" type="VBoxContainer" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="Left" type="Label" parent="Margin Controls/VBoxContainer2"]
+[node name="Left" type="Label" parent="Margin Controls/LeftContainer"]
 layout_mode = 2
 text = "Left"
 
-[node name="LeftBox" type="SpinBox" parent="Margin Controls/VBoxContainer2"]
+[node name="LeftBox" type="SpinBox" parent="Margin Controls/LeftContainer"]
 layout_mode = 2
 
 [node name="Dummy3" type="Control" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Margin Controls"]
+[node name="RightContainer" type="VBoxContainer" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="Right" type="Label" parent="Margin Controls/VBoxContainer3"]
+[node name="Right" type="Label" parent="Margin Controls/RightContainer"]
 layout_mode = 2
 text = "Right"
 
-[node name="RightBox" type="SpinBox" parent="Margin Controls/VBoxContainer3"]
+[node name="RightBox" type="SpinBox" parent="Margin Controls/RightContainer"]
 layout_mode = 2
 
 [node name="Dummy4" type="Control" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="Margin Controls"]
+[node name="BottomContainer" type="VBoxContainer" parent="Margin Controls"]
 layout_mode = 2
 
-[node name="Bottom" type="Label" parent="Margin Controls/VBoxContainer4"]
+[node name="Bottom" type="Label" parent="Margin Controls/BottomContainer"]
 layout_mode = 2
 text = "Bottom
 "
 
-[node name="BottomBox" type="SpinBox" parent="Margin Controls/VBoxContainer4"]
+[node name="BottomBox" type="SpinBox" parent="Margin Controls/BottomContainer"]
 layout_mode = 2
 
 [node name="Dummy5" type="Control" parent="Margin Controls"]
 layout_mode = 2
+
+[connection signal="value_changed" from="Size Controls/WidthContainer/WidthBox" to="." method="_update_from_size_edit" unbinds=1]
+[connection signal="value_changed" from="Size Controls/HeightContainer/HeightBox" to="." method="_update_from_size_edit" unbinds=1]
+[connection signal="value_changed" from="Margin Controls/TopContainer/TopBox" to="." method="_update_from_margin_edit" unbinds=1]
+[connection signal="value_changed" from="Margin Controls/LeftContainer/LeftBox" to="." method="_update_from_margin_edit" unbinds=1]
+[connection signal="value_changed" from="Margin Controls/RightContainer/RightBox" to="." method="_update_from_margin_edit" unbinds=1]
+[connection signal="value_changed" from="Margin Controls/BottomContainer/BottomBox" to="." method="_update_from_margin_edit" unbinds=1]

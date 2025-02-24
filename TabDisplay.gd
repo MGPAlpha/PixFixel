@@ -6,6 +6,8 @@ static func get_singleton() -> TabDisplay:
 	
 func _init() -> void:
 	_singleton = self
+	
+var current_tab: EditorTab
 
 
 class EditorTab extends RefCounted:
@@ -18,6 +20,11 @@ var tabs:Array[EditorTab]
 func _ready() -> void:
 	$TabBar.tab_changed.connect(select_tab)
 	$TabBar.tab_close_pressed.connect(close_tab)
+	for i in $TabBar.tab_count:
+		var new_tab = EditorTab.new()
+		new_tab.name = $TabBar.get_tab_title(i)
+		new_tab.control = $TabDisplayWindow.get_child(i)
+		tabs.append(new_tab)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,7 +35,7 @@ func add_tab(window: Node, name: String):
 	var new_tab = EditorTab.new()
 	new_tab.name = name
 	new_tab.control = window
-	
+	tabs.append(new_tab)
 	$TabBar.add_tab(name)
 	$TabDisplayWindow.add_child(window)
 	var newTabIndex = $TabBar.tab_count - 1
@@ -37,9 +44,11 @@ func add_tab(window: Node, name: String):
 	select_tab(newTabIndex)
 
 func select_tab(i: int) -> void:
-	for child in $TabDisplayWindow.get_children():
-		child.visible = false
-	$TabDisplayWindow.get_child(i).visible = true
+	if current_tab && current_tab.control:
+		current_tab.control.visible = false
+	current_tab = tabs[i]
+	if current_tab && current_tab.control:
+		current_tab.control.visible = true
 	print("Selected tab", i)
 
 func close_tab(i: int) -> void:
