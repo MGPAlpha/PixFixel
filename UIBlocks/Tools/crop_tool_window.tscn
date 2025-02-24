@@ -1,5 +1,104 @@
-[gd_scene format=3 uid="uid://c8djhc6qwkrng"]
+[gd_scene load_steps=2 format=3 uid="uid://c8djhc6qwkrng"]
+
+[ext_resource type="Script" path="res://Tools/CropToolWindow.gd" id="1_dloed"]
 
 [node name="CropToolWindow" type="VBoxContainer"]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dloed")
+
+[node name="Size" type="Label" parent="."]
+layout_mode = 2
+text = "Size"
+
+[node name="Size Controls" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Size Controls"]
+layout_mode = 2
+
+[node name="Width" type="Label" parent="Size Controls/HBoxContainer"]
+layout_mode = 2
+text = "Width:"
+
+[node name="WidthBox" type="SpinBox" parent="Size Controls/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Size Controls"]
+layout_mode = 2
+
+[node name="Height" type="Label" parent="Size Controls/HBoxContainer2"]
+layout_mode = 2
+text = "Height:"
+
+[node name="HeightBox" type="SpinBox" parent="Size Controls/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Margins" type="Label" parent="."]
+layout_mode = 2
+text = "Margins
+"
+
+[node name="Margin Controls" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 3
+
+[node name="Dummy" type="Control" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="Top" type="Label" parent="Margin Controls/VBoxContainer"]
+layout_mode = 2
+text = "Top
+"
+
+[node name="TopBox" type="SpinBox" parent="Margin Controls/VBoxContainer"]
+layout_mode = 2
+
+[node name="Dummy2" type="Control" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="Left" type="Label" parent="Margin Controls/VBoxContainer2"]
+layout_mode = 2
+text = "Left"
+
+[node name="LeftBox" type="SpinBox" parent="Margin Controls/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Dummy3" type="Control" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="Right" type="Label" parent="Margin Controls/VBoxContainer3"]
+layout_mode = 2
+text = "Right"
+
+[node name="RightBox" type="SpinBox" parent="Margin Controls/VBoxContainer3"]
+layout_mode = 2
+
+[node name="Dummy4" type="Control" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="Margin Controls"]
+layout_mode = 2
+
+[node name="Bottom" type="Label" parent="Margin Controls/VBoxContainer4"]
+layout_mode = 2
+text = "Bottom
+"
+
+[node name="BottomBox" type="SpinBox" parent="Margin Controls/VBoxContainer4"]
+layout_mode = 2
+
+[node name="Dummy5" type="Control" parent="Margin Controls"]
+layout_mode = 2

@@ -9,6 +9,8 @@ func _init() -> void:
 
 @onready var tool_window = $ToolOptionsDisplayWindow
 
+var active_tool = null
+
 var tool_windows: Dictionary
 
 # Called when the node enters the scene tree for the first time.
@@ -22,6 +24,11 @@ func _process(delta: float) -> void:
 
 func add_tool(name: String, window: Control):
 	print("Adding tool ", name)
+	tool_windows[name] = window
 
 func select_tool(name: String):
 	print("Selecting tool", name)
+	if active_tool != null:
+		tool_window.remove_child(tool_windows[active_tool])
+	tool_window.add_child(tool_windows[name])
+	active_tool = name

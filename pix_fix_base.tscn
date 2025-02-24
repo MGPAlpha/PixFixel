@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3fgccwg7pmwj"]
+[gd_scene load_steps=9 format=3 uid="uid://c3fgccwg7pmwj"]
 
 [ext_resource type="Script" path="res://PFApplication.gd" id="1_ibu74"]
 [ext_resource type="Script" path="res://TabDisplay.gd" id="2_6eru2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ctyymg4oirnrx" path="res://UIBlocks/tool_pick_button.tscn" id="3_3qwrt"]
 [ext_resource type="PackedScene" uid="uid://c8djhc6qwkrng" path="res://UIBlocks/Tools/crop_tool_window.tscn" id="4_k61p4"]
 [ext_resource type="Script" path="res://ToolOptionsDisplay.gd" id="5_4i2nj"]
+[ext_resource type="PackedScene" uid="uid://d3vmdl5miwd8y" path="res://UIBlocks/Tools/downscale_tool_window.tscn" id="5_fkbjg"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sholv"]
 
@@ -71,7 +72,14 @@ layout_mode = 2
 [node name="Crop Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList" instance=ExtResource("3_3qwrt")]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_sholv")
+text = "Crop"
 tool_window_scene = ExtResource("4_k61p4")
+
+[node name="Downscale Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList" instance=ExtResource("3_3qwrt")]
+layout_mode = 2
+button_group = SubResource("ButtonGroup_sholv")
+text = "Downscale"
+tool_window_scene = ExtResource("5_fkbjg")
 
 [node name="TabDisplay" type="VBoxContainer" parent="Main Window/VBoxContainer/HBoxContainer"]
 layout_mode = 2
