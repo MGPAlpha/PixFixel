@@ -103,9 +103,14 @@ layout_mode = 2
 [node name="Dummy5" type="Control" parent="Margin Controls"]
 layout_mode = 2
 
+[node name="Confirm Button" type="Button" parent="."]
+layout_mode = 2
+text = "Confirm Crop"
+
 [connection signal="value_changed" from="Size Controls/WidthContainer/WidthBox" to="." method="_update_from_size_edit" unbinds=1]
 [connection signal="value_changed" from="Size Controls/HeightContainer/HeightBox" to="." method="_update_from_size_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/TopContainer/TopBox" to="." method="_update_from_margin_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/LeftContainer/LeftBox" to="." method="_update_from_margin_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/RightContainer/RightBox" to="." method="_update_from_margin_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/BottomContainer/BottomBox" to="." method="_update_from_margin_edit" unbinds=1]
+[connection signal="pressed" from="Confirm Button" to="." method="_confirm_crop"]

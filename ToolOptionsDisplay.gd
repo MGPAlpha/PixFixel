@@ -34,3 +34,7 @@ func select_tool(name: String):
 	tool_window.add_child(active_tool)
 	active_tool.reset_tool()
 	
+func reset_current_tool():
+	if (active_tool):
+		active_tool.reset_tool()
+		print("Resetting current tool")

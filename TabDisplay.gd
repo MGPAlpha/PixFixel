@@ -39,16 +39,18 @@ func add_tab(window: Node, name: String):
 	$TabBar.add_tab(name)
 	$TabDisplayWindow.add_child(window)
 	var newTabIndex = $TabBar.tab_count - 1
-	$TabBar.current_tab = newTabIndex
+	$TabBar.current_tab = newTabIndex # This triggers select_tab, no need to call manually
 	$TabBar.ensure_tab_visible(newTabIndex)
-	select_tab(newTabIndex)
 
 func select_tab(i: int) -> void:
+	#if current_tab == tabs[i]:
+		#return
 	if current_tab && current_tab.control:
 		current_tab.control.visible = false
 	current_tab = tabs[i]
 	if current_tab && current_tab.control:
 		current_tab.control.visible = true
+	ToolOptionsDisplay.get_singleton().reset_current_tool()
 	print("Selected tab", i)
 
 func close_tab(i: int) -> void:

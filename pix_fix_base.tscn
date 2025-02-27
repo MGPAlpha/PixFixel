@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c3fgccwg7pmwj"]
+[gd_scene load_steps=10 format=3 uid="uid://c3fgccwg7pmwj"]
 
 [ext_resource type="Script" path="res://PFApplication.gd" id="1_ibu74"]
 [ext_resource type="Script" path="res://TabDisplay.gd" id="2_6eru2"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://d3vmdl5miwd8y" path="res://UIBlocks/Tools/downscale_tool_window.tscn" id="5_fkbjg"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sholv"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_xa1xx"]
 
 [node name="PFApplication" type="Node"]
 script = ExtResource("1_ibu74")
@@ -77,7 +79,7 @@ tool_window_scene = ExtResource("4_k61p4")
 
 [node name="Downscale Button" parent="Main Window/VBoxContainer/HBoxContainer/ToolSelector/VScrollBar/ToolList" instance=ExtResource("3_3qwrt")]
 layout_mode = 2
-button_group = SubResource("ButtonGroup_sholv")
+button_group = SubResource("ButtonGroup_xa1xx")
 text = "Downscale"
 tool_window_scene = ExtResource("5_fkbjg")
 

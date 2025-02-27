@@ -6,6 +6,7 @@ class_name CropToolWindow extends ToolWindowBase
 @onready var left_box = $"Margin Controls/LeftContainer/LeftBox"
 @onready var right_box = $"Margin Controls/RightContainer/RightBox"
 @onready var bottom_box = $"Margin Controls/BottomContainer/BottomBox"
+@onready var confirm_button = $"Confirm Button"
 
 var crop_top: int = 0
 var crop_left: int = 0
@@ -82,3 +83,11 @@ func _update_entry_display():
 	
 	width_box.set_value_no_signal(img_width - crop_left - crop_right)
 	height_box.set_value_no_signal(img_height - crop_top - crop_bottom)
+	
+	if current_document == null || crop_top == 0 && crop_left == 0 && crop_right == 0 && crop_bottom == 0:
+		confirm_button.disabled = true
+	else:
+		confirm_button.disabled = false
+	
+func _confirm_crop():
+	pass
