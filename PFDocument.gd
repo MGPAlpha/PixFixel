@@ -5,9 +5,11 @@ var name: String
 var path: String
 
 var image: Image
+var editor: EditorWindow
 
 func _init(_path: String) -> void:
 	path = _path
 	name = _path.get_file()
 	image = Image.new()
 	image.load(_path)
+	

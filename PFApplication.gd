@@ -18,4 +18,5 @@ func open_file(path: String) -> void:
 	var editor_window = new_doc_window as EditorWindow
 	TabDisplay.get_singleton().add_tab(new_doc_window, new_doc.name)
 	editor_window.link_to_document(new_doc)
+	new_doc.editor = editor_window
 	

@@ -90,4 +90,10 @@ func _update_entry_display():
 		confirm_button.disabled = false
 	
 func _confirm_crop():
-	pass
+	var crop = CropTool.new()
+	
+	var diff = crop.applyCrop(current_document.image, crop_top, crop_left, crop_right, crop_bottom)
+	diff.apply(current_document.image)
+	current_document.editor.texture.set_image(current_document.image)
+	
+	reset_tool()
