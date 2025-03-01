@@ -9,8 +9,6 @@ func applyCrop(img: Image, top: int, left: int, right: int, bottom: int) -> NewI
 	
 	var new_img = Image.create_empty(new_width, new_height, false, img.get_format())
 	
-	for i in new_width:
-		for j in new_height:
-			new_img.set_pixel(i, j, img.get_pixel(i + left, j + top))
-			
+	new_img.blit_rect(img, Rect2i(left, top, new_width, new_height), Vector2.ZERO)
+	
 	return NewImageChangeDiff.new(img, new_img)
