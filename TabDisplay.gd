@@ -47,6 +47,9 @@ func select_tab(i: int) -> void:
 		#return
 	if current_tab && current_tab.control:
 		current_tab.control.visible = false
+	if i < 0:
+		current_tab = null
+		return
 	current_tab = tabs[i]
 	if current_tab && current_tab.control:
 		current_tab.control.visible = true
@@ -54,6 +57,15 @@ func select_tab(i: int) -> void:
 	print("Selected tab", i)
 
 func close_tab(i: int) -> void:
-	$TabBar.remove_tab(i)
-	$TabDisplayWindow.remove_child($TabDisplayWindow.get_child(i))
+	var tab_to_close = tabs[i]
+	print("Current tab:", current_tab)
+	print("Tab to close:", tab_to_close)
+	if current_tab == tab_to_close:
+		current_tab = null
+	if tab_to_close.control is EditorWindow:
+		PFApplication.get_singleton().close_doc((tab_to_close.control as EditorWindow).document)
+	tab_to_close.control.queue_free()
+	tabs.remove_at(i)
+	
+	$TabBar.remove_tab(i) # Order important! remove_tab() triggers a new select_tab()
 	print("close tab", i)

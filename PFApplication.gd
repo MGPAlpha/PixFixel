@@ -20,3 +20,7 @@ func open_file(path: String) -> void:
 	editor_window.link_to_document(new_doc)
 	new_doc.editor = editor_window
 	
+func close_doc(doc: PFDocument):
+	var index = documents.find(doc)
+	documents.remove_at(index)
+	
