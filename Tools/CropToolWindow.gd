@@ -8,12 +8,16 @@ class_name CropToolWindow extends ToolWindowBase
 @onready var bottom_box = $"Margin Controls/BottomContainer/BottomBox"
 @onready var confirm_button = $"Confirm Button"
 
+@export var crop_gizmo_prefab: PackedScene
+
 var crop_top: int = 0
 var crop_left: int = 0
 var crop_right: int = 0
 var crop_bottom: int = 0
 
 var current_document: PFDocument = null
+
+var crop_gizmo: CropToolGizmo
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,6 +39,11 @@ func reset_tool():
 	crop_left = 0
 	crop_right = 0
 	crop_bottom = 0
+	
+	if current_document && !crop_gizmo:
+		crop_gizmo = crop_gizmo_prefab.instantiate()
+		current_document.editor.viewport.add_child(crop_gizmo)
+		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
 	_update_entry_display()
 	
 func _update_from_size_edit():
@@ -88,6 +97,10 @@ func _update_entry_display():
 		confirm_button.disabled = true
 	else:
 		confirm_button.disabled = false
+		
+	if crop_gizmo:
+		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
+		crop_gizmo.queue_redraw()
 	
 func _confirm_crop():
 	var crop = CropTool.new()

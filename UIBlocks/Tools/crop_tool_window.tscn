@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8djhc6qwkrng"]
+[gd_scene load_steps=3 format=3 uid="uid://c8djhc6qwkrng"]
 
 [ext_resource type="Script" path="res://Tools/CropToolWindow.gd" id="1_dloed"]
+[ext_resource type="PackedScene" uid="uid://bmdn3l5xrgwue" path="res://Tools/Gizmos/CropToolGizmo.tscn" id="2_2qiuu"]
 
 [node name="CropToolWindow" type="VBoxContainer"]
 anchors_preset = 15
@@ -9,6 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dloed")
+crop_gizmo_prefab = ExtResource("2_2qiuu")
 
 [node name="Size" type="Label" parent="."]
 layout_mode = 2

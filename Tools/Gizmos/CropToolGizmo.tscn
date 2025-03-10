@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmdn3l5xrgwue"]
+
+[ext_resource type="Script" path="res://Tools/Gizmos/CropToolGizmo.gd" id="1_ud8s6"]
+
+[node name="CropToolGizmo" type="Node2D"]
+script = ExtResource("1_ud8s6")
