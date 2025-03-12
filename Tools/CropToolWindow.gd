@@ -29,8 +29,9 @@ func _process(delta: float) -> void:
 	pass
 	
 func reset_tool():
+	print("resetting crop tool")
 	var current_tab = TabDisplay.get_singleton().current_tab
-	if !current_tab || !(is_instance_of(current_tab.control, EditorWindow)):
+	if !current_tab || !(current_tab.control is EditorWindow):
 		print("No editable tab selected")
 		current_document = null
 	else:
@@ -40,10 +41,30 @@ func reset_tool():
 	crop_right = 0
 	crop_bottom = 0
 	
+	print("current tab: ", current_tab)
+	if current_tab:
+		print("current tab name: ", current_tab.name)
+	print("current doc: ", current_document)
+	print("crop gizmo: ", crop_gizmo)
+	
 	if current_document && !crop_gizmo:
 		crop_gizmo = crop_gizmo_prefab.instantiate()
 		current_document.editor.viewport.add_child(crop_gizmo)
 		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
+		crop_gizmo.top_adjusted.connect(_adjust_top)
+		crop_gizmo.right_adjusted.connect(_adjust_right)
+		crop_gizmo.bottom_adjusted.connect(_adjust_bottom)
+		crop_gizmo.left_adjusted.connect(_adjust_left)
+		crop_gizmo.adjustment_complete.connect(_update_entry_display)
+		print("no gizmo existed")
+	elif current_document && crop_gizmo:
+		crop_gizmo.reparent(current_document.editor.viewport)
+		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
+		print("gizmo existed, reparented")
+	elif crop_gizmo:
+		crop_gizmo.queue_free()
+		crop_gizmo = null
+		print("no point in gizmo, removed")
 	_update_entry_display()
 	
 func _update_from_size_edit():
@@ -62,6 +83,24 @@ func _update_from_margin_edit():
 	crop_right = right_box.value
 	crop_bottom = bottom_box.value
 	_update_entry_display()
+	
+func _adjust_top(val: int):
+	val = clamp(val, 0, current_document.image.get_height() - crop_bottom)
+	print("adjusting top")
+	crop_top = val
+	
+func _adjust_right(val: int):
+	val = clamp(val, 0, current_document.image.get_width() - crop_left)
+	print("adjusting right")
+	crop_right = val
+	
+func _adjust_bottom(val: int):
+	val = clamp(val, 0, current_document.image.get_height() - crop_top)
+	crop_bottom = val
+	
+func _adjust_left(val: int):
+	val = clamp(val, 0, current_document.image.get_width() - crop_right)
+	crop_left = val
 		
 func _update_entry_display():
 	var img_width = 0
@@ -69,6 +108,11 @@ func _update_entry_display():
 	if (current_document):
 		img_width = current_document.image.get_width()
 		img_height = current_document.image.get_height()
+
+	top_box.set_value_no_signal(0)
+	left_box.set_value_no_signal(0)
+	right_box.set_value_no_signal(0)
+	bottom_box.set_value_no_signal(0)
 
 	top_box.max_value = img_height - crop_bottom
 	bottom_box.max_value = img_height - crop_top

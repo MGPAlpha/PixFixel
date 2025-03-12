@@ -54,6 +54,7 @@ func select_tab(i: int) -> void:
 	if current_tab && current_tab.control:
 		current_tab.control.visible = true
 	ToolOptionsDisplay.get_singleton().reset_current_tool()
+	print("resetting current tool")
 	print("Selected tab", i)
 
 func close_tab(i: int) -> void:
