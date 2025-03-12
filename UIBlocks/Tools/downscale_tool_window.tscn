@@ -12,5 +12,57 @@ script = ExtResource("1_3qufv")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
-text = "Test
-This is the downscale tool window"
+text = "Downscale"
+
+[node name="Downscale Modes" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Simple" type="VBoxContainer" parent="Downscale Modes"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Original Resolution" type="Label" parent="Downscale Modes/Simple"]
+layout_mode = 2
+text = "Original Resolution
+"
+
+[node name="Resolution Controls" type="HFlowContainer" parent="Downscale Modes/Simple"]
+layout_mode = 2
+
+[node name="Width Container" type="HBoxContainer" parent="Downscale Modes/Simple/Resolution Controls"]
+layout_mode = 2
+
+[node name="Width" type="Label" parent="Downscale Modes/Simple/Resolution Controls/Width Container"]
+layout_mode = 2
+text = "Width"
+
+[node name="WidthBox" type="SpinBox" parent="Downscale Modes/Simple/Resolution Controls/Width Container"]
+layout_mode = 2
+
+[node name="Height Container" type="HBoxContainer" parent="Downscale Modes/Simple/Resolution Controls"]
+layout_mode = 2
+
+[node name="Height" type="Label" parent="Downscale Modes/Simple/Resolution Controls/Height Container"]
+layout_mode = 2
+text = "Height"
+
+[node name="HeightBox" type="SpinBox" parent="Downscale Modes/Simple/Resolution Controls/Height Container"]
+layout_mode = 2
+
+[node name="Confirm Button" type="Button" parent="Downscale Modes/Simple"]
+layout_mode = 2
+text = "Confirm Downscale"
+
+[node name="Smart" type="VBoxContainer" parent="Downscale Modes"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Interactive" type="VBoxContainer" parent="Downscale Modes"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[connection signal="pressed" from="Downscale Modes/Simple/Confirm Button" to="." method="_confirm_simple_crop"]

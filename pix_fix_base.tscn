@@ -131,7 +131,7 @@ size_flags_horizontal = 4
 text = "Open File"
 
 [node name="ToolOptionsDisplay" type="VBoxContainer" parent="Main Window/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 script = ExtResource("5_4i2nj")
 

@@ -1,5 +1,13 @@
 class_name DownscaleToolWindow extends ToolWindowBase
 
+@onready var simple_width_box = $"Downscale Modes/Simple/Resolution Controls/Width Container/WidthBox"
+@onready var simple_height_box = $"Downscale Modes/Simple/Resolution Controls/Height Container/HeightBox"
+@onready var simple_confirm_button = $"Downscale Modes/Simple/Confirm Button"
+
+var current_document: PFDocument
+
+var simple_height: int
+var simple_width: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -9,3 +17,51 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+	
+func reset_tool():
+	var current_tab = TabDisplay.get_singleton().current_tab
+	if !current_tab || !(current_tab.control is EditorWindow):
+		print("No editable tab selected")
+		current_document = null
+	else:
+		current_document = (current_tab.control as EditorWindow).document
+	
+	simple_width = 0
+	simple_height = 0
+	
+	if current_document:
+		simple_width = current_document.image.get_width()
+		simple_height = current_document.image.get_height()
+	
+	_update_simple_tab()
+	
+func _update_simple_tab():
+	var img_width = 0
+	var img_height = 0
+	if current_document:
+		img_width = current_document.image.get_width()
+		img_height = current_document.image.get_height()
+	
+	simple_width_box.set_value_no_signal(0)
+	simple_height_box.set_value_no_signal(0)
+	
+	simple_width_box.min_value = 0
+	simple_height_box.min_value = 0
+
+	simple_width_box.max_value = img_width
+	simple_height_box.max_value = img_height
+	
+	simple_width_box.set_value_no_signal(simple_width)
+	simple_height_box.set_value_no_signal(simple_height)
+	
+func _confirm_simple_crop():
+	var downscale = DownscaleTool.new()
+	
+	simple_width = simple_width_box.value
+	simple_height = simple_height_box.value
+	
+	var diff = await downscale.downscale_simple(current_document.image, simple_width, simple_height)
+	diff.apply(current_document.image)
+	current_document.editor.texture.set_image(current_document.image)
+	
+	reset_tool()
