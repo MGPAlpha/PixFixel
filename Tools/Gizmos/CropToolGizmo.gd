@@ -95,6 +95,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					dragging = false
 					curr_handle = null
 					print("released")
+					get_viewport().set_input_as_handled()
 					
 	if event is InputEventMouseMotion and dragging:
 		if curr_handle:

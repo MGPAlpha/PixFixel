@@ -67,6 +67,11 @@ func reset_tool():
 		print("no point in gizmo, removed")
 	_update_entry_display()
 	
+func on_tool_hide():
+	if crop_gizmo:
+		crop_gizmo.queue_free()
+		crop_gizmo = null
+
 func _update_from_size_edit():
 	var img_width = 0
 	var img_height = 0
@@ -86,12 +91,10 @@ func _update_from_margin_edit():
 	
 func _adjust_top(val: int):
 	val = clamp(val, 0, current_document.image.get_height() - crop_bottom)
-	print("adjusting top")
 	crop_top = val
 	
 func _adjust_right(val: int):
 	val = clamp(val, 0, current_document.image.get_width() - crop_left)
-	print("adjusting right")
 	crop_right = val
 	
 func _adjust_bottom(val: int):
@@ -113,6 +116,8 @@ func _update_entry_display():
 	left_box.set_value_no_signal(0)
 	right_box.set_value_no_signal(0)
 	bottom_box.set_value_no_signal(0)
+	width_box.set_value_no_signal(0)
+	height_box.set_value_no_signal(0)
 
 	top_box.max_value = img_height - crop_bottom
 	bottom_box.max_value = img_height - crop_top

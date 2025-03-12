@@ -29,6 +29,7 @@ func add_tool(name: String, window: Control):
 func select_tool(name: String):
 	print("Selecting tool", name)
 	if active_tool != null:
+		active_tool.on_tool_hide()
 		tool_window.remove_child(active_tool)
 	active_tool = tool_windows[name]
 	tool_window.add_child(active_tool)
