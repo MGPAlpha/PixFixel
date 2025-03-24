@@ -17,9 +17,10 @@ text = "Downscale"
 [node name="Downscale Modes" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 1
 
 [node name="Simple" type="VBoxContainer" parent="Downscale Modes"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -56,13 +57,67 @@ layout_mode = 2
 text = "Confirm Downscale"
 
 [node name="Smart" type="VBoxContainer" parent="Downscale Modes"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Analysis" type="Label" parent="Downscale Modes/Smart"]
+layout_mode = 2
+text = "Analysis"
+
+[node name="Resolution Analysis" type="VBoxContainer" parent="Downscale Modes/Smart"]
+layout_mode = 2
+
+[node name="Original Resolution" type="Label" parent="Downscale Modes/Smart/Resolution Analysis"]
+layout_mode = 2
+text = "Original Resolution
+"
+
+[node name="Resolution Controls" type="HFlowContainer" parent="Downscale Modes/Smart/Resolution Analysis"]
+layout_mode = 2
+
+[node name="Width Container" type="HBoxContainer" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls"]
+layout_mode = 2
+
+[node name="Width" type="Label" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls/Width Container"]
+layout_mode = 2
+text = "Width"
+
+[node name="WidthBox" type="SpinBox" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls/Width Container"]
+layout_mode = 2
+editable = false
+
+[node name="Height Container" type="HBoxContainer" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls"]
+layout_mode = 2
+
+[node name="Height" type="Label" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls/Height Container"]
+layout_mode = 2
+text = "Height"
+
+[node name="HeightBox" type="SpinBox" parent="Downscale Modes/Smart/Resolution Analysis/Resolution Controls/Height Container"]
+layout_mode = 2
+editable = false
+
+[node name="No Analysis Warning" type="Label" parent="Downscale Modes/Smart"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Press \"Analyze Image\" to calculate downscaling parameters "
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Downscale Modes/Smart"]
+layout_mode = 2
+
+[node name="Analyze Image Button" type="Button" parent="Downscale Modes/Smart/HBoxContainer"]
+layout_mode = 2
+text = "Analyze Image"
+
+[node name="Downscale Image Button" type="Button" parent="Downscale Modes/Smart/HBoxContainer"]
+layout_mode = 2
+text = "Downscale"
 
 [node name="Interactive" type="VBoxContainer" parent="Downscale Modes"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[connection signal="pressed" from="Downscale Modes/Simple/Confirm Button" to="." method="_confirm_simple_crop"]
+[connection signal="pressed" from="Downscale Modes/Simple/Confirm Button" to="." method="_confirm_simple_downscale"]
+[connection signal="pressed" from="Downscale Modes/Smart/HBoxContainer/Analyze Image Button" to="." method="_confirm_smart_analyze"]

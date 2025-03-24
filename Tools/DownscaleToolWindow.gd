@@ -9,6 +9,9 @@ var current_document: PFDocument
 var simple_height: int
 var simple_width: int
 
+var smart_height: int
+var smart_width: int
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -54,7 +57,7 @@ func _update_simple_tab():
 	simple_width_box.set_value_no_signal(simple_width)
 	simple_height_box.set_value_no_signal(simple_height)
 	
-func _confirm_simple_crop():
+func _confirm_simple_downscale():
 	var downscale = DownscaleTool.new()
 	
 	simple_width = simple_width_box.value
@@ -65,3 +68,17 @@ func _confirm_simple_crop():
 	current_document.editor.texture.set_image(current_document.image)
 	
 	reset_tool()
+	
+func _confirm_smart_analyze():
+	var img = current_document.image
+	var fourier = FourierTools.get_2d_fft(img)
+	
+	var fourier_display = TextureRect.new()
+	fourier_display.name = "Fourier"
+	fourier_display.texture = ImageTexture.create_from_image(fourier[0])
+	TabDisplay.get_singleton().add_tab(fourier_display, "Fourier")
+	
+	var phase_display = TextureRect.new()
+	phase_display.name = "Fourier"
+	phase_display.texture = ImageTexture.create_from_image(fourier[1])
+	TabDisplay.get_singleton().add_tab(phase_display, "Phase")

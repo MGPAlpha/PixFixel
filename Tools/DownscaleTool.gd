@@ -34,3 +34,6 @@ func downscale(img: Image, new_width: int, new_height: int,
 		var result = NewImageChangeDiff.new(img, newImage)
 		viewport.queue_free()
 		return result
+
+func analyze_for_smart_downscale(img: Image) -> Vector2i:
+	return Vector2i.ZERO
