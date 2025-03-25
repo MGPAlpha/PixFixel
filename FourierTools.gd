@@ -33,39 +33,46 @@ static func get_2d_fft(image: Image) -> Array[Image]:
 			row.append(fft_cols_transposed[j][i])
 		fft_cols.append(row)
 
-	var reals = []
-	var imaginaries = []
+	var amplitudes = []
+	var phases = []
 	for i in fft_cols.size():
 		var real_row = FFT.reals(fft_cols[i])
 		var imaginary_row = FFT.imags(fft_cols[i])
-		reals.append(real_row)
-		imaginaries.append(imaginary_row)
+		var amp_row = []
+		var phase_row = []
+		
+		for j in real_row.size():
+			amp_row.append(sqrt(pow(real_row[j], 2) + pow(imaginary_row[j], 2)))
+			phase_row.append(atan2(imaginary_row[j], real_row[j]) / (2*PI) + .5)
+		
+		amplitudes.append(amp_row)
+		phases.append(phase_row)
 		
 	# Square and Scale
 	var max = -1000000000000000
-	for i in reals.size():
-		for j in reals[i].size():
-			var val = reals[i][j]
+	for i in amplitudes.size():
+		for j in amplitudes[i].size():
+			var val = amplitudes[i][j]
 			val = val*val
 			max = max(val, max)
-			reals[i][j] = val
+			amplitudes[i][j] = val
 
 	var log_scaling = 1.0/(log(1+max))
 
-	for i in reals.size():
-		for j in reals[i].size():
-			var val = reals[i][j]
+	for i in amplitudes.size():
+		for j in amplitudes[i].size():
+			var val = amplitudes[i][j]
 			val = log_scaling * log(1+val)
-			reals[i][j] = val
+			amplitudes[i][j] = val
 
-	var periodogram = Image.create_empty(reals[0].size(), reals.size(), false, Image.FORMAT_L8)
-	for i in reals.size():
-		for j in reals[i].size():
-			periodogram.set_pixel(j, i, Color(reals[i][j], reals[i][j], reals[i][j]))
+	var periodogram = Image.create_empty(amplitudes[0].size(), amplitudes.size(), false, Image.FORMAT_L8)
+	for i in amplitudes.size():
+		for j in amplitudes[i].size():
+			periodogram.set_pixel(j, i, Color(amplitudes[i][j], amplitudes[i][j], amplitudes[i][j]))
 	
-	var phasogram = Image.create_empty(imaginaries[0].size(), imaginaries.size(), false, Image.FORMAT_L8)
-	for i in imaginaries.size():
-		for j in imaginaries[i].size():
-			phasogram.set_pixel(j, i, Color(imaginaries[i][j], imaginaries[i][j], imaginaries[i][j]))
+	var phasogram = Image.create_empty(phases[0].size(), phases.size(), false, Image.FORMAT_L8)
+	for i in phases.size():
+		for j in phases[i].size():
+			phasogram.set_pixel(j, i, Color(phases[i][j], phases[i][j], phases[i][j]))
 	
 	return [periodogram, phasogram]
