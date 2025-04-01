@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0ptw1fuc4eoh"]
+
+[ext_resource type="Script" path="res://Tools/SmartDownscaleToolWindow.gd" id="1_cxeo1"]
+
+[node name="Smart" type="VBoxContainer"]
+script = ExtResource("1_cxeo1")
+metadata/_tab_index = 1
+
+[node name="Analysis" type="Label" parent="."]
+layout_mode = 2
+text = "Analysis"
+
+[node name="Resolution Analysis" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Original Resolution" type="Label" parent="Resolution Analysis"]
+layout_mode = 2
+text = "Original Resolution
+"
+
+[node name="Resolution Controls" type="HFlowContainer" parent="Resolution Analysis"]
+layout_mode = 2
+
+[node name="Width Container" type="HBoxContainer" parent="Resolution Analysis/Resolution Controls"]
+layout_mode = 2
+
+[node name="Width" type="Label" parent="Resolution Analysis/Resolution Controls/Width Container"]
+layout_mode = 2
+text = "Width"
+
+[node name="WidthBox" type="SpinBox" parent="Resolution Analysis/Resolution Controls/Width Container"]
+layout_mode = 2
+editable = false
+
+[node name="Height Container" type="HBoxContainer" parent="Resolution Analysis/Resolution Controls"]
+layout_mode = 2
+
+[node name="Height" type="Label" parent="Resolution Analysis/Resolution Controls/Height Container"]
+layout_mode = 2
+text = "Height"
+
+[node name="HeightBox" type="SpinBox" parent="Resolution Analysis/Resolution Controls/Height Container"]
+layout_mode = 2
+editable = false
+
+[node name="No Analysis Warning" type="Label" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Press \"Analyze Image\" to calculate downscaling parameters "
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Analyze Image Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Analyze Image"
+
+[node name="Downscale Image Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Downscale"
+
+[connection signal="pressed" from="HBoxContainer/Analyze Image Button" to="." method="_confirm_smart_analyze"]

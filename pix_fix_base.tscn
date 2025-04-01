@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ctyymg4oirnrx" path="res://UIBlocks/tool_pick_button.tscn" id="3_3qwrt"]
 [ext_resource type="PackedScene" uid="uid://c8djhc6qwkrng" path="res://UIBlocks/Tools/crop_tool_window.tscn" id="4_k61p4"]
 [ext_resource type="Script" path="res://ToolOptionsDisplay.gd" id="5_4i2nj"]
-[ext_resource type="PackedScene" uid="uid://d3vmdl5miwd8y" path="res://UIBlocks/Tools/downscale_tool_window.tscn" id="5_fkbjg"]
+[ext_resource type="PackedScene" uid="uid://b6exgum72dnp5" path="res://UIBlocks/Tools/downscale_tool_window.tscn" id="5_fkbjg"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sholv"]
 
