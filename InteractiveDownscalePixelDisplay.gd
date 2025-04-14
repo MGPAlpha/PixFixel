@@ -32,3 +32,6 @@ func update_values(vals: InteractiveDownscalePixel):
 	pixel_y_box.set_value_no_signal(vals.pixel.y)
 	position_x_box.set_value_no_signal(vals.position.x)
 	position_y_box.set_value_no_signal(vals.position.y)
+	
+func _on_delete_pressed() -> void:
+	delete_pressed.emit(index)

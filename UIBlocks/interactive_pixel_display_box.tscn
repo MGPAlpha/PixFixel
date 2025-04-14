@@ -56,3 +56,4 @@ layout_mode = 2
 [connection signal="value_changed" from="PixelContainer/PixelYBox" to="." method="_on_value_box_changed" unbinds=1]
 [connection signal="value_changed" from="PositionContainer/PositionXBox" to="." method="_on_value_box_changed" unbinds=1]
 [connection signal="value_changed" from="PositionContainer/PositionYBox" to="." method="_on_value_box_changed" unbinds=1]
+[connection signal="pressed" from="DeleteButton" to="." method="_on_delete_pressed"]

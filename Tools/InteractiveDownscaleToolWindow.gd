@@ -56,6 +56,14 @@ func reset_tool() -> void:
 func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	var new_pixel = InteractiveDownscalePixel.new()
 	new_pixel.position = pos
+	if known_pixels.size() == 0:
+		new_pixel.pixel = Vector2i.ZERO
+	elif known_pixels.size() == 1:
+		new_pixel.pixel.x = 1 if known_pixels[0].position.x < new_pixel.position.x else -1
+		new_pixel.pixel.y = 1 if known_pixels[0].position.y < new_pixel.position.y else -1
+	else:
+		var downscale = DownscaleTool.new()
+		new_pixel.pixel = downscale.estimate_pixel_index_from_position(new_pixel.position, known_pixels)
 	var new_pixel_display = pixel_display_gizmo.instantiate()
 	new_pixel_display.index = known_pixels.size()
 	known_pixels.append(new_pixel)
@@ -63,7 +71,14 @@ func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	defined_pixels_list.add_child(new_pixel_display)
 	new_pixel_display.update_values(new_pixel)
 	new_pixel_display.values_changed.connect(_known_pixel_updated)
+	new_pixel_display.delete_pressed.connect(_delete_known_pixel)
 
 func _known_pixel_updated(index: int, values: InteractiveDownscalePixel)-> void:
 	known_pixels[index] = values
 	known_pixel_displays[index].update_values(values)
+	
+func _delete_known_pixel(index: int):
+	known_pixels.remove_at(index)
+	known_pixel_displays.pop_back().queue_free()
+	for i in known_pixels.size():
+		known_pixel_displays[i].update_values(known_pixels[i])

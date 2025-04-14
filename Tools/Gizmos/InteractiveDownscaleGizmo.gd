@@ -27,6 +27,7 @@ func _draw() -> void:
 	var size_factor = get_viewport_transform().get_scale().x
 	for i in known_pixels.size():
 		var drag_handle_screen_pos = (known_pixels[i].position - half_img_size)
+		draw_circle(drag_handle_screen_pos, 4/size_factor, Color.BLACK)
 		draw_circle(drag_handle_screen_pos, 3/size_factor, Color.ORANGE)
 
 
