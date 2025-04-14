@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxep46am5uo0q"]
+
+[ext_resource type="Script" path="res://InteractiveDownscalePixelDisplay.gd" id="1_yhhoj"]
+
+[node name="InteractivePixelDisplayBox" type="VBoxContainer"]
+script = ExtResource("1_yhhoj")
+
+[node name="PixelContainer" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="Pixel" type="Label" parent="PixelContainer"]
+layout_mode = 2
+text = "Pixel:"
+
+[node name="PixelXBox" type="SpinBox" parent="PixelContainer"]
+layout_mode = 2
+allow_greater = true
+allow_lesser = true
+
+[node name="PixelYBox" type="SpinBox" parent="PixelContainer"]
+layout_mode = 2
+allow_greater = true
+allow_lesser = true
+
+[node name="PositionContainer" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="Position" type="Label" parent="PositionContainer"]
+layout_mode = 2
+text = "Position:"
+
+[node name="PositionXBox" type="SpinBox" parent="PositionContainer"]
+layout_mode = 2
+step = 0.01
+allow_greater = true
+allow_lesser = true
+custom_arrow_step = 1.0
+
+[node name="PositionYBox" type="SpinBox" parent="PositionContainer"]
+layout_mode = 2
+step = 0.01
+allow_greater = true
+allow_lesser = true
+custom_arrow_step = 1.0
+
+[node name="DeleteButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Delete
+"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[connection signal="value_changed" from="PixelContainer/PixelXBox" to="." method="_on_value_box_changed" unbinds=1]
+[connection signal="value_changed" from="PixelContainer/PixelYBox" to="." method="_on_value_box_changed" unbinds=1]
+[connection signal="value_changed" from="PositionContainer/PositionXBox" to="." method="_on_value_box_changed" unbinds=1]
+[connection signal="value_changed" from="PositionContainer/PositionYBox" to="." method="_on_value_box_changed" unbinds=1]

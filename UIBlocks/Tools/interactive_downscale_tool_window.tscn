@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckh13cnog2h5i"]
+
+[ext_resource type="Script" path="res://Tools/InteractiveDownscaleToolWindow.gd" id="1_tcjis"]
+[ext_resource type="PackedScene" uid="uid://cxep46am5uo0q" path="res://UIBlocks/interactive_pixel_display_box.tscn" id="2_aorff"]
+[ext_resource type="PackedScene" uid="uid://di7evkw1ehv2x" path="res://Tools/Gizmos/interactive_downscale_gizmo.tscn" id="3_jbhf8"]
+
+[node name="Interactive" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tcjis")
+pixel_display_gizmo = ExtResource("2_aorff")
+interactive_downscale_gizmo_prefab = ExtResource("3_jbhf8")
+metadata/_tab_index = 2
+
+[node name="Defined Pixels" type="Label" parent="."]
+layout_mode = 2
+text = "Defined Pixels:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="DefinedPixelsList" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

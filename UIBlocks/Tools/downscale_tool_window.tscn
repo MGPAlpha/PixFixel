@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6exgum72dnp5"]
+[gd_scene load_steps=5 format=3 uid="uid://b6exgum72dnp5"]
 
 [ext_resource type="PackedScene" uid="uid://d3vmdl5miwd8y" path="res://UIBlocks/Tools/tabbed_tool_window.tscn" id="1_5bghx"]
 [ext_resource type="PackedScene" uid="uid://kix3ra0cvnmy" path="res://UIBlocks/Tools/simple_downscale_tool_window.tscn" id="2_fhpxg"]
 [ext_resource type="PackedScene" uid="uid://c0ptw1fuc4eoh" path="res://UIBlocks/Tools/smart_downscale_tool_window.tscn" id="3_f5srl"]
+[ext_resource type="PackedScene" uid="uid://ckh13cnog2h5i" path="res://UIBlocks/Tools/interactive_downscale_tool_window.tscn" id="4_1fuki"]
 
 [node name="DownscaleToolWindow" instance=ExtResource("1_5bghx")]
 
@@ -18,4 +19,7 @@ layout_mode = 2
 
 [node name="Smart" parent="Tab Display" index="2" instance=ExtResource("3_f5srl")]
 visible = false
+layout_mode = 2
+
+[node name="Interactive" parent="Tab Display" index="3" instance=ExtResource("4_1fuki")]
 layout_mode = 2
