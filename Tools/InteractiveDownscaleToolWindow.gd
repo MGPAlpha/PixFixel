@@ -72,13 +72,21 @@ func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	new_pixel_display.update_values(new_pixel)
 	new_pixel_display.values_changed.connect(_known_pixel_updated)
 	new_pixel_display.delete_pressed.connect(_delete_known_pixel)
+	if (interactive_downscale_gizmo):
+		interactive_downscale_gizmo.update_pixels(known_pixels)
 
 func _known_pixel_updated(index: int, values: InteractiveDownscalePixel)-> void:
 	known_pixels[index] = values
 	known_pixel_displays[index].update_values(values)
+	
+	if (interactive_downscale_gizmo):
+		interactive_downscale_gizmo.update_pixels(known_pixels)
 	
 func _delete_known_pixel(index: int):
 	known_pixels.remove_at(index)
 	known_pixel_displays.pop_back().queue_free()
 	for i in known_pixels.size():
 		known_pixel_displays[i].update_values(known_pixels[i])
+		
+	if (interactive_downscale_gizmo):
+		interactive_downscale_gizmo.update_pixels(known_pixels)
