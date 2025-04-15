@@ -53,6 +53,11 @@ func reset_tool() -> void:
 		interactive_downscale_gizmo = null
 		print("no point in gizmo, removed")
 
+func on_tool_hide():
+	if interactive_downscale_gizmo:
+		interactive_downscale_gizmo.queue_free()
+		interactive_downscale_gizmo = null
+
 func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	var new_pixel = InteractiveDownscalePixel.new()
 	new_pixel.position = pos
