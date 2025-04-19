@@ -89,6 +89,35 @@ func linear_regression_from_known_pixels(known_pixels: Array[InteractiveDownscal
 
 func estimate_pixel_index_from_position(position: Vector2, known_pixels: Array[InteractiveDownscalePixel]) -> Vector2i:
 	var regressions = linear_regression_from_known_pixels(known_pixels)
-	var pixel_x = (position.x - regressions["x"]["a"]) / regressions["x"]["b"]
-	var pixel_y = (position.y - regressions["y"]["a"]) / regressions["y"]["b"]
+	var pixel_x = eval_regression_inverse(regressions["x"], position.x)
+	var pixel_y = eval_regression_inverse(regressions["y"], position.y)
 	return Vector2i(round(pixel_x), round(pixel_y))
+
+func eval_regression(reg: Dictionary, x: float) -> float:
+	return reg["b"] * x + reg["a"]
+
+func eval_regression_inverse(reg: Dictionary, y: float) -> float:
+	return (y - reg["a"]) / reg["b"]
+
+func downscale_interactive(img: Image, known_pixels: Array[InteractiveDownscalePixel]) -> NewImageChangeDiff:
+	var img_dim = img.get_size()
+	var img_width = img_dim.x
+	var img_height = img_dim.y
+	var regressions = linear_regression_from_known_pixels(known_pixels)
+	var x_reg = regressions["x"]
+	var y_reg = regressions["y"]
+	
+	var min_pixel_x = ceil(eval_regression_inverse(x_reg, 0)) - .5
+	var min_pixel_y = ceil(eval_regression_inverse(y_reg, 0)) - .5
+	var max_pixel_x = floor(eval_regression_inverse(x_reg, img_width)) + .5
+	var max_pixel_y = floor(eval_regression_inverse(y_reg, img_height)) + .5
+	
+	var downscale_width = max_pixel_x - min_pixel_x
+	var downscale_height = max_pixel_y - min_pixel_y
+	
+	var pad_top = eval_regression(y_reg, min_pixel_y)
+	var pad_left = eval_regression(x_reg, min_pixel_x)
+	var pad_right = img_width - eval_regression(x_reg, max_pixel_x)
+	var pad_bottom = img_height - eval_regression(y_reg, max_pixel_y)
+	
+	return await downscale(img, downscale_width, downscale_height, -pad_top, -pad_right, -pad_bottom, -pad_left)

@@ -4,6 +4,7 @@ class_name InteractiveDownscaleToolWindow extends ToolWindowBase
 @export var interactive_downscale_gizmo_prefab: PackedScene
 
 @onready var defined_pixels_list = $ScrollContainer/DefinedPixelsList
+@onready var confirm_button = $ConfirmDownscale
 
 var current_document: PFDocument
 
@@ -52,6 +53,14 @@ func reset_tool() -> void:
 		interactive_downscale_gizmo.queue_free()
 		interactive_downscale_gizmo = null
 		print("no point in gizmo, removed")
+		
+	refresh_tool_ui()
+
+func refresh_tool_ui():
+	if known_pixels.size() < 2:
+		confirm_button.disabled = true
+	else:
+		confirm_button.disabled = false
 
 func on_tool_hide():
 	if interactive_downscale_gizmo:
@@ -79,6 +88,8 @@ func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	new_pixel_display.delete_pressed.connect(_delete_known_pixel)
 	if (interactive_downscale_gizmo):
 		interactive_downscale_gizmo.update_pixels(known_pixels)
+	
+	refresh_tool_ui()
 
 func _known_pixel_updated(index: int, values: InteractiveDownscalePixel)-> void:
 	known_pixels[index] = values
@@ -86,6 +97,8 @@ func _known_pixel_updated(index: int, values: InteractiveDownscalePixel)-> void:
 	
 	if (interactive_downscale_gizmo):
 		interactive_downscale_gizmo.update_pixels(known_pixels)
+		
+	refresh_tool_ui()
 	
 func _delete_known_pixel(index: int):
 	known_pixels.remove_at(index)
@@ -95,3 +108,13 @@ func _delete_known_pixel(index: int):
 		
 	if (interactive_downscale_gizmo):
 		interactive_downscale_gizmo.update_pixels(known_pixels)
+		
+	refresh_tool_ui()
+		
+func _confirm_downscale():
+	var downscale = DownscaleTool.new()
+	var downscale_diff = await downscale.downscale_interactive(current_document.image, known_pixels)
+	downscale_diff.apply(current_document.image)
+	current_document.editor.texture.set_image(current_document.image)
+	
+	reset_tool()
