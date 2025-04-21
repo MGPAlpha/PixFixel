@@ -25,6 +25,8 @@ func _ready() -> void:
 		new_tab.name = $TabBar.get_tab_title(i)
 		new_tab.control = $TabDisplayWindow.get_child(i)
 		tabs.append(new_tab)
+	if tabs.size() > 0:
+		current_tab = tabs[0]
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

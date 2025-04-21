@@ -18,6 +18,12 @@ layout_mode = 2
 text = "Original Resolution
 "
 
+[node name="Not Working Warning" type="Label" parent="Resolution Analysis"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0.47451, 1)
+text = "Warning! This subtool doesn't work yet. Pressing 'Analyze' will briefly freeze the application before opening two new tabs containing a 2D fourier analysis of the image."
+autowrap_mode = 2
+
 [node name="Resolution Controls" type="HFlowContainer" parent="Resolution Analysis"]
 layout_mode = 2
 
