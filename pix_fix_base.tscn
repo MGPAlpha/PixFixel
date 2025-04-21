@@ -35,12 +35,10 @@ layout_mode = 2
 script = ExtResource("2_khr37")
 
 [node name="File" type="PopupMenu" parent="Main Window/VBoxContainer/MenuBar"]
-item_count = 3
+item_count = 2
 item_0/text = "Open"
 item_1/text = "Save As"
 item_1/id = 1
-item_2/text = "Save"
-item_2/id = 2
 
 [node name="OpenDialog" type="FileDialog" parent="Main Window/VBoxContainer/MenuBar"]
 title = "Open a File"
