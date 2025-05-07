@@ -3,15 +3,30 @@ extends MenuBar
 @onready var open_dialog = $OpenDialog
 @onready var save_as_dialog = $SaveAsDialog
 
+var last_open_path: String
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 	$File.id_pressed.connect(on_file_menu_select)
+	
+	var config = ConfigFile.new()
+	var err = config.load("user://file_config.cfg")
+	
+	if err == OK:
+		last_open_path = config.get_value("file_config", "last_open_path")
+		open_dialog.current_path = last_open_path
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func _exit_tree() -> void:
+	var config = ConfigFile.new()
+	config.set_value("file_config", "last_open_path", last_open_path)
+	config.save("user://file_config.cfg")
+	
 
 func on_file_menu_select(id: int):
 	match(id):
@@ -26,6 +41,7 @@ func on_open():
 	open_dialog.visible = true
 
 func open_file(path: String):
+	last_open_path = path
 	PFApplication.get_singleton().open_file(path)
 
 func on_save_as():
