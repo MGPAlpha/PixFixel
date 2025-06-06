@@ -1,5 +1,7 @@
 class_name TabDisplay extends Control
 
+@onready var tab_bar = $TabBar
+
 static var _singleton: TabDisplay
 static func get_singleton() -> TabDisplay:
 	return _singleton
@@ -9,6 +11,7 @@ func _init() -> void:
 	
 var current_tab: EditorTab
 
+signal editor_tab_switched(tab: EditorTab)
 
 class EditorTab extends RefCounted:
 	var name:String
@@ -33,16 +36,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func add_tab(window: Node, name: String):
+func add_tab(window: Control, name: String) -> int:
 	var new_tab = EditorTab.new()
 	new_tab.name = name
 	new_tab.control = window
+	window.visible = false
 	tabs.append(new_tab)
 	$TabBar.add_tab(name)
 	$TabDisplayWindow.add_child(window)
 	var newTabIndex = $TabBar.tab_count - 1
-	$TabBar.current_tab = newTabIndex # This triggers select_tab, no need to call manually
-	$TabBar.ensure_tab_visible(newTabIndex)
+	return newTabIndex
 
 func select_tab(i: int) -> void:
 	#if current_tab == tabs[i]:
@@ -56,6 +59,7 @@ func select_tab(i: int) -> void:
 	if current_tab && current_tab.control:
 		current_tab.control.visible = true
 	ToolOptionsDisplay.get_singleton().reset_current_tool()
+	editor_tab_switched.emit(current_tab)
 	print("resetting current tool")
 	print("Selected tab", i)
 

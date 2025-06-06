@@ -29,6 +29,20 @@ func _exit_tree() -> void:
 	config.save("user://file_config.cfg")
 	
 
+func _update_menus():
+	var current_tab = TabDisplay.get_singleton().current_tab
+	var editor = current_tab.control as EditorWindow
+	if editor:
+		$File.set_item_disabled(1, false)
+		var can_undo = editor.document.undo_stack.size() > 0
+		var can_redo = editor.document.redo_stack.size() > 0
+		$Edit.set_item_disabled(0, !can_undo)
+		$Edit.set_item_disabled(1, !can_redo)
+	else:
+		$File.set_item_disabled(1, true)
+		$Edit.set_item_disabled(0, true)
+		$Edit.set_item_disabled(1, true)
+
 func on_file_menu_select(id: int):
 	match(id):
 		0: #Open
