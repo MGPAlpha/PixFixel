@@ -31,7 +31,7 @@ func downscale(img: Image, new_width: int, new_height: int,
 		viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await RenderingServer.frame_post_draw
 		var newImage = viewport.get_texture().get_image()
-		var result = NewImageChangeDiff.new(img, newImage)
+		var result = NewImageChangeDiff.new("Downscale", img, newImage)
 		viewport.queue_free()
 		return result
 

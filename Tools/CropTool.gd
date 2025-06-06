@@ -11,4 +11,4 @@ func applyCrop(img: Image, top: int, left: int, right: int, bottom: int) -> NewI
 	
 	new_img.blit_rect(img, Rect2i(left, top, new_width, new_height), Vector2.ZERO)
 	
-	return NewImageChangeDiff.new(img, new_img)
+	return NewImageChangeDiff.new("Crop", img, new_img)

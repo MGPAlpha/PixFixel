@@ -64,8 +64,7 @@ func _confirm_simple_downscale():
 	simple_height = simple_height_box.value
 	
 	var diff = await downscale.downscale_simple(current_document.image, simple_width, simple_height)
-	diff.apply(current_document.image)
-	current_document.editor.texture.set_image(current_document.image)
+	current_document.apply_new_change(diff)
 	
 	reset_tool()
 	

@@ -40,6 +40,13 @@ item_0/text = "Open"
 item_1/text = "Save As"
 item_1/id = 1
 
+[node name="Edit" type="PopupMenu" parent="Main Window/VBoxContainer/MenuBar"]
+auto_translate_mode = 1
+item_count = 2
+item_0/text = "Undo"
+item_1/text = "Redo"
+item_1/id = 1
+
 [node name="OpenDialog" type="FileDialog" parent="Main Window/VBoxContainer/MenuBar"]
 title = "Open a File"
 initial_position = 2

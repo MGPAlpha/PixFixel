@@ -9,6 +9,7 @@ var last_open_path: String
 func _ready() -> void:
 	pass # Replace with function body.
 	$File.id_pressed.connect(on_file_menu_select)
+	$Edit.id_pressed.connect(on_edit_menu_select)
 	
 	var config = ConfigFile.new()
 	var err = config.load("user://file_config.cfg")
@@ -36,6 +37,13 @@ func on_file_menu_select(id: int):
 			on_save_as()
 		2: #Save
 			print("pressed Save")
+
+func on_edit_menu_select(id: int):
+	match(id):
+		0: #Undo
+			_on_undo()
+		1: #Redo
+			_on_redo()
 
 func on_open():
 	open_dialog.visible = true
@@ -72,3 +80,24 @@ func _on_save_as_file_selected(path: String):
 		"exr":
 			curr_image.save_exr(path)
 	
+func _on_undo():
+	var curr_tab = TabDisplay.get_singleton().current_tab.control
+	if !curr_tab or !(curr_tab is EditorWindow):
+		print("No file available to save!")
+		return
+	var curr_doc = (curr_tab as EditorWindow).document
+	
+	curr_doc.undo()
+	if (ToolOptionsDisplay.get_singleton()):
+		ToolOptionsDisplay.get_singleton().reset_current_tool()
+
+func _on_redo():
+	var curr_tab = TabDisplay.get_singleton().current_tab.control
+	if !curr_tab or !(curr_tab is EditorWindow):
+		print("No file available to save!")
+		return
+	var curr_doc = (curr_tab as EditorWindow).document
+	
+	curr_doc.redo()
+	if (ToolOptionsDisplay.get_singleton()):
+		ToolOptionsDisplay.get_singleton().reset_current_tool()

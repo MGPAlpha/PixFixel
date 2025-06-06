@@ -114,7 +114,6 @@ func _delete_known_pixel(index: int):
 func _confirm_downscale():
 	var downscale = DownscaleTool.new()
 	var downscale_diff = await downscale.downscale_interactive(current_document.image, known_pixels)
-	downscale_diff.apply(current_document.image)
-	current_document.editor.texture.set_image(current_document.image)
+	current_document.apply_new_change(downscale_diff)
 	
 	reset_tool()

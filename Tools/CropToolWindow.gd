@@ -155,7 +155,6 @@ func _confirm_crop():
 	var crop = CropTool.new()
 	
 	var diff = await crop.applyCrop(current_document.image, crop_top, crop_left, crop_right, crop_bottom)
-	diff.apply(current_document.image)
-	current_document.editor.texture.set_image(current_document.image)
+	current_document.apply_new_change(diff)
 	
 	reset_tool()
