@@ -97,7 +97,7 @@ func _on_save_as_file_selected(path: String):
 func _on_undo():
 	var curr_tab = TabDisplay.get_singleton().current_tab.control
 	if !curr_tab or !(curr_tab is EditorWindow):
-		print("No file available to save!")
+		print("No file open to undo!")
 		return
 	var curr_doc = (curr_tab as EditorWindow).document
 	
@@ -108,10 +108,20 @@ func _on_undo():
 func _on_redo():
 	var curr_tab = TabDisplay.get_singleton().current_tab.control
 	if !curr_tab or !(curr_tab is EditorWindow):
-		print("No file available to save!")
+		print("No file open to redo!")
 		return
 	var curr_doc = (curr_tab as EditorWindow).document
 	
 	curr_doc.redo()
 	if (ToolOptionsDisplay.get_singleton()):
 		ToolOptionsDisplay.get_singleton().reset_current_tool()
+		
+
+func _unhandled_input(event: InputEvent) -> void:
+	
+	if event.is_action_pressed("ui_redo"):
+		_on_redo()
+		accept_event()
+	elif event.is_action_pressed("ui_undo"):
+		_on_undo()
+		accept_event()
