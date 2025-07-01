@@ -7,6 +7,8 @@ var texture: ImageTexture
 @onready var scene_camera = $SubViewport/Camera2D
 @onready var viewport = $SubViewport
 
+signal edited(editor: EditorWindow)
+
 var _pan_dragging = false
 
 # Called when the node enters the scene tree for the first time.
@@ -15,6 +17,7 @@ func _ready() -> void:
 
 func link_to_document(doc: PFDocument) -> void:
 	document = doc
+	document.edited.connect(_on_document_edited)
 	texture = ImageTexture.create_from_image(document.image)
 	canvas_sprite.texture = texture
 	zoom_to_fit()
@@ -40,6 +43,10 @@ func pan_camera(amount: Vector2):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func _on_document_edited() -> void:
+	texture.set_image(document.image)
+	edited.emit(self)
 	
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

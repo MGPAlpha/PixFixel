@@ -16,6 +16,7 @@ var crop_right: int = 0
 var crop_bottom: int = 0
 
 var current_document: PFDocument = null
+var current_editor: EditorWindow = null
 
 var crop_gizmo: CropToolGizmo
 
@@ -35,7 +36,8 @@ func reset_tool():
 		print("No editable tab selected")
 		current_document = null
 	else:
-		current_document = (current_tab.control as EditorWindow).document
+		current_editor = current_tab.control as EditorWindow
+		current_document = current_editor.document
 	crop_top = 0
 	crop_left = 0
 	crop_right = 0
@@ -49,7 +51,7 @@ func reset_tool():
 	
 	if current_document && !crop_gizmo:
 		crop_gizmo = crop_gizmo_prefab.instantiate()
-		current_document.editor.viewport.add_child(crop_gizmo)
+		current_editor.viewport.add_child(crop_gizmo)
 		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
 		crop_gizmo.top_adjusted.connect(_adjust_top)
 		crop_gizmo.right_adjusted.connect(_adjust_right)
@@ -58,7 +60,7 @@ func reset_tool():
 		crop_gizmo.adjustment_complete.connect(_update_entry_display)
 		print("no gizmo existed")
 	elif current_document && crop_gizmo:
-		crop_gizmo.reparent(current_document.editor.viewport)
+		crop_gizmo.reparent(current_editor.viewport)
 		crop_gizmo.update_positions(crop_top, crop_left, crop_right, crop_bottom, current_document.image)
 		print("gizmo existed, reparented")
 	elif crop_gizmo:

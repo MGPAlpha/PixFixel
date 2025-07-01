@@ -19,7 +19,6 @@ func open_file(path: String) -> void:
 	var new_tab_index = TabDisplay.get_singleton().add_tab(new_doc_window, new_doc.name)
 	editor_window.link_to_document(new_doc)
 	TabDisplay.get_singleton().tab_bar.current_tab = new_tab_index
-	new_doc.editor = editor_window
 	
 func close_doc(doc: PFDocument):
 	var index = documents.find(doc)

@@ -5,10 +5,11 @@ var name: String
 var path: String
 
 var image: Image
-var editor: EditorWindow
 
 var undo_stack: Array[ToolBase.ChangeDiff]
 var redo_stack: Array[ToolBase.ChangeDiff]
+
+signal edited
 
 func _init(_path: String) -> void:
 	path = _path
@@ -31,8 +32,8 @@ func undo():
 		return
 	var change = undo_stack.pop_back()
 	change.revert(image)
-	editor.texture.set_image(image)
 	redo_stack.push_back(change)
+	edited.emit()
 	
 func redo():
 	if redo_stack.size() == 0:
@@ -40,11 +41,11 @@ func redo():
 		return
 	var change = redo_stack.pop_back()
 	change.apply(image)
-	editor.texture.set_image(image)
 	undo_stack.push_back(change)
+	edited.emit()
 	
 func apply_new_change(change: ToolBase.ChangeDiff):
 	redo_stack.clear()
 	change.apply(image)
-	editor.texture.set_image(image)
 	undo_stack.push_back(change)
+	edited.emit()

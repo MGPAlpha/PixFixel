@@ -6,7 +6,8 @@ class_name InteractiveDownscaleToolWindow extends ToolWindowBase
 @onready var defined_pixels_list = $ScrollContainer/DefinedPixelsList
 @onready var confirm_button = $ConfirmDownscale
 
-var current_document: PFDocument
+var current_document: PFDocument = null
+var current_editor: EditorWindow = null
 
 var known_pixels: Array[InteractiveDownscalePixel]
 var known_pixel_displays: Array[InteractiveDownscalePixelDisplay]
@@ -28,7 +29,8 @@ func reset_tool() -> void:
 		print("No editable tab selected")
 		current_document = null
 	else:
-		current_document = (current_tab.control as EditorWindow).document
+		current_editor = current_tab.control as EditorWindow
+		current_document = current_editor.document
 		
 		
 	for display: InteractiveDownscalePixelDisplay in known_pixel_displays:
@@ -38,14 +40,14 @@ func reset_tool() -> void:
 	
 	if current_document && !interactive_downscale_gizmo:
 		interactive_downscale_gizmo = interactive_downscale_gizmo_prefab.instantiate()
-		current_document.editor.viewport.add_child(interactive_downscale_gizmo)
+		current_editor.viewport.add_child(interactive_downscale_gizmo)
 		interactive_downscale_gizmo.update_pixels(known_pixels)
 		interactive_downscale_gizmo.curr_image = current_document.image
 		interactive_downscale_gizmo.add_known_pixel.connect(_add_known_pixel_at_pos)
 		interactive_downscale_gizmo.pixel_dragged.connect(_known_pixel_updated)
 		print("no gizmo existed")
 	elif current_document && interactive_downscale_gizmo:
-		interactive_downscale_gizmo.reparent(current_document.editor.viewport)
+		interactive_downscale_gizmo.reparent(current_editor.viewport)
 		interactive_downscale_gizmo.update_pixels(known_pixels)
 		interactive_downscale_gizmo.curr_image = current_document.image
 		print("gizmo existed, reparented")

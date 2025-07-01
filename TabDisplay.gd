@@ -12,6 +12,7 @@ func _init() -> void:
 var current_tab: EditorTab
 
 signal editor_tab_switched(tab: EditorTab)
+signal current_tab_edited(tab: EditorTab)
 
 class EditorTab extends RefCounted:
 	var name:String
@@ -47,17 +48,26 @@ func add_tab(window: Control, name: String) -> int:
 	var newTabIndex = $TabBar.tab_count - 1
 	return newTabIndex
 
+func _on_tab_edited(editor: EditorWindow):
+	current_tab_edited.emit(editor)
+
 func select_tab(i: int) -> void:
 	#if current_tab == tabs[i]:
 		#return
 	if current_tab && current_tab.control:
 		current_tab.control.visible = false
+		if current_tab.control is EditorWindow:
+			var old_tab = (current_tab.control) as EditorWindow
+			old_tab.edited.disconnect_all()
 	if i < 0:
 		current_tab = null
 		return
 	current_tab = tabs[i]
 	if current_tab && current_tab.control:
 		current_tab.control.visible = true
+		if current_tab.control is EditorWindow:
+			var new_editor = current_tab.control as EditorWindow
+			new_editor.edited.connect(_on_tab_edited)
 	ToolOptionsDisplay.get_singleton().reset_current_tool()
 	editor_tab_switched.emit(current_tab)
 	print("resetting current tool")
