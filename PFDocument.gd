@@ -16,6 +16,7 @@ func _init(_path: String) -> void:
 	name = _path.get_file()
 	image = Image.new()
 	image.load(_path)
+	image.generate_mipmaps()
 	#var avg_value = 0
 	#for i in image.get_width():
 		#for j in image.get_height():
@@ -32,6 +33,7 @@ func undo():
 		return
 	var change = undo_stack.pop_back()
 	change.revert(image)
+	image.generate_mipmaps()
 	redo_stack.push_back(change)
 	edited.emit()
 	
@@ -41,11 +43,13 @@ func redo():
 		return
 	var change = redo_stack.pop_back()
 	change.apply(image)
+	image.generate_mipmaps()
 	undo_stack.push_back(change)
 	edited.emit()
 	
 func apply_new_change(change: ToolBase.ChangeDiff):
 	redo_stack.clear()
 	change.apply(image)
+	image.generate_mipmaps()
 	undo_stack.push_back(change)
 	edited.emit()

@@ -2,14 +2,35 @@ class_name DownscaleTool extends ToolBase
 
 func downscale_simple(img: Image, new_width: int, new_height: int) -> NewImageChangeDiff:
 	
-	var result = await downscale(img, new_width, new_height, 0, 0, 0, 0)
+	var result = await downscale_safe_mipmap(img, new_width, new_height, 0, 0, 0, 0)
 	return result
+
+func downscale_safe_mipmap(img: Image, new_width: int, new_height: int,
+	top_pad: float,
+	right_pad: float,
+	bottom_pad: float,
+	left_pad: float):
+		if new_width < (img.get_width() - right_pad - left_pad)/2 \
+		and new_height < (img.get_height() - top_pad - bottom_pad)/2:
+			#two-stage downscale to utilize 1-level-up mipmap
+			print("using 2 stage downscale")
+			var intermediate_width = new_width*2
+			var intermediate_height = new_height*2
+			
+			var intermediate_img = (await downscale(img, intermediate_width, intermediate_height, top_pad, right_pad, bottom_pad, left_pad, true))._new_image
+			var final_img = (await downscale(intermediate_img, new_width, new_height, 0, 0, 0, 0, false))._new_image
+			var diff = NewImageChangeDiff.new("Downscale", img, final_img)
+			return diff
+		else:
+			return await downscale(img, new_width, new_height, top_pad, right_pad, bottom_pad, left_pad, false)
 
 func downscale(img: Image, new_width: int, new_height: int,
 	top_pad: float,
 	right_pad: float,
 	bottom_pad: float,
-	left_pad: float):
+	left_pad: float,
+	use_mipmaps: bool):	
+		print("Mipmaps: ", img.get_mipmap_count())
 		var new_size = Vector2(new_width, new_height)
 		var original_size = Vector2(img.get_width(), img.get_height())
 		original_size += Vector2(left_pad + right_pad, top_pad + bottom_pad)
@@ -23,7 +44,7 @@ func downscale(img: Image, new_width: int, new_height: int,
 		viewport.add_child(camera)
 		var sprite = Sprite2D.new()
 		sprite.centered = false
-		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS if use_mipmaps else CanvasItem.TEXTURE_FILTER_NEAREST
 		var texture = ImageTexture.create_from_image(img)
 		sprite.texture = texture
 		viewport.add_child(sprite)
@@ -120,4 +141,4 @@ func downscale_interactive(img: Image, known_pixels: Array[InteractiveDownscaleP
 	var pad_right = img_width - eval_regression(x_reg, max_pixel_x)
 	var pad_bottom = img_height - eval_regression(y_reg, max_pixel_y)
 	
-	return await downscale(img, downscale_width, downscale_height, -pad_top, -pad_right, -pad_bottom, -pad_left)
+	return await downscale_safe_mipmap(img, downscale_width, downscale_height, -pad_top, -pad_right, -pad_bottom, -pad_left)
