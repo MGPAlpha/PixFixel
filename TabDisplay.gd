@@ -58,7 +58,7 @@ func select_tab(i: int) -> void:
 		current_tab.control.visible = false
 		if current_tab.control is EditorWindow:
 			var old_tab = (current_tab.control) as EditorWindow
-			old_tab.edited.disconnect_all()
+			old_tab.edited.disconnect(_on_tab_edited)
 	if i < 0:
 		current_tab = null
 		return
