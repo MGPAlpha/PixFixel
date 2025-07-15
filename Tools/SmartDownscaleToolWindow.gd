@@ -1,7 +1,5 @@
 class_name SmartDownscaleToolWindow extends ToolWindowBase
 
-var current_document: PFDocument
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -12,12 +10,7 @@ func _process(delta: float) -> void:
 	pass
 	
 func reset_tool():
-	var current_tab = TabDisplay.get_singleton().current_tab
-	if !current_tab || !(current_tab.control is EditorWindow):
-		print("No editable tab selected")
-		current_document = null
-	else:
-		current_document = (current_tab.control as EditorWindow).document
+	super.reset_tool()
 
 func _confirm_smart_analyze():
 	var doc = current_document

@@ -23,6 +23,7 @@ func link_to_document(doc: PFDocument) -> void:
 	zoom_to_fit()
 	
 func zoom_to_fit() -> void:
+	scene_camera.position = Vector2.ZERO
 	var zoom = min(float(viewport.size.y) / float(document.image.get_height()), float(viewport.size.x) / float(document.image.get_width()))
 	scene_camera.zoom = Vector2(zoom, zoom)
 	

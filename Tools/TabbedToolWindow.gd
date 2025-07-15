@@ -3,6 +3,8 @@ class_name TabbedToolWindow extends ToolWindowBase
 @onready var tab_display = $"Tab Display"
 
 func reset_tool():
+	super.reset_tool()
+	
 	var curr_tab = tab_display.get_current_tab_control()
 	if curr_tab is ToolWindowBase:
 		(curr_tab as ToolWindowBase).reset_tool()

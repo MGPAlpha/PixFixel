@@ -6,9 +6,6 @@ class_name InteractiveDownscaleToolWindow extends ToolWindowBase
 @onready var defined_pixels_list = $ScrollContainer/DefinedPixelsList
 @onready var confirm_button = $ConfirmDownscale
 
-var current_document: PFDocument = null
-var current_editor: EditorWindow = null
-
 var known_pixels: Array[InteractiveDownscalePixel]
 var known_pixel_displays: Array[InteractiveDownscalePixelDisplay]
 
@@ -23,15 +20,8 @@ func _process(delta: float) -> void:
 	pass
 	
 func reset_tool() -> void:
+	super.reset_tool()
 	print("resetting crop tool")
-	var current_tab = TabDisplay.get_singleton().current_tab
-	if !current_tab || !(current_tab.control is EditorWindow):
-		print("No editable tab selected")
-		current_document = null
-	else:
-		current_editor = current_tab.control as EditorWindow
-		current_document = current_editor.document
-		
 		
 	for display: InteractiveDownscalePixelDisplay in known_pixel_displays:
 		display.queue_free()
@@ -117,5 +107,7 @@ func _confirm_downscale():
 	var downscale = DownscaleTool.new()
 	var downscale_diff = await downscale.downscale_interactive(current_document.image, known_pixels)
 	current_document.apply_new_change(downscale_diff)
+	
+	current_editor.zoom_to_fit()
 	
 	reset_tool()

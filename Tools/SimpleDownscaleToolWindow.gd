@@ -4,8 +4,6 @@ class_name SimpleDownscaleToolWindow extends ToolWindowBase
 @onready var height_box = $"Resolution Controls/Height Container/HeightBox"
 @onready var confirm_button = $"Confirm Button"
 
-var current_document: PFDocument
-
 var height: int
 var width: int
 
@@ -19,13 +17,9 @@ func _process(delta: float) -> void:
 	pass
 
 func reset_tool():
+	super.reset_tool()
+	
 	print("Resetting Simple Downscale Tool")
-	var current_tab = TabDisplay.get_singleton().current_tab
-	if !current_tab || !(current_tab.control is EditorWindow):
-		print("No editable tab selected")
-		current_document = null
-	else:
-		current_document = (current_tab.control as EditorWindow).document
 	
 	width = 0
 	height = 0
@@ -63,5 +57,7 @@ func _confirm_downscale():
 	
 	var diff = await downscale.downscale_simple(current_document.image, width, height)
 	current_document.apply_new_change(diff)
+	
+	current_editor.zoom_to_fit()
 	
 	reset_tool()

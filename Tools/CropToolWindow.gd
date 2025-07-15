@@ -15,9 +15,6 @@ var crop_left: int = 0
 var crop_right: int = 0
 var crop_bottom: int = 0
 
-var current_document: PFDocument = null
-var current_editor: EditorWindow = null
-
 var crop_gizmo: CropToolGizmo
 
 # Called when the node enters the scene tree for the first time.
@@ -30,22 +27,15 @@ func _process(delta: float) -> void:
 	pass
 	
 func reset_tool():
+	super.reset_tool()
+	
 	print("resetting crop tool")
-	var current_tab = TabDisplay.get_singleton().current_tab
-	if !current_tab || !(current_tab.control is EditorWindow):
-		print("No editable tab selected")
-		current_document = null
-	else:
-		current_editor = current_tab.control as EditorWindow
-		current_document = current_editor.document
+	
 	crop_top = 0
 	crop_left = 0
 	crop_right = 0
 	crop_bottom = 0
 	
-	print("current tab: ", current_tab)
-	if current_tab:
-		print("current tab name: ", current_tab.name)
 	print("current doc: ", current_document)
 	print("crop gizmo: ", crop_gizmo)
 	
