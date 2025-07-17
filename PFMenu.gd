@@ -34,10 +34,22 @@ func _update_menus():
 	var editor = current_tab.control as EditorWindow
 	if editor:
 		$File.set_item_disabled(1, false)
+		
 		var can_undo = editor.document.undo_stack.size() > 0
 		var can_redo = editor.document.redo_stack.size() > 0
+		
 		$Edit.set_item_disabled(0, !can_undo)
+		var undo_text = "Undo"
+		if can_undo:
+			undo_text += " " + editor.document.undo_stack[-1].name
+		$Edit.set_item_text(0, undo_text)
+		
 		$Edit.set_item_disabled(1, !can_redo)
+		var redo_text = "Redo"
+		if can_redo:
+			redo_text += " " + editor.document.redo_stack[-1].name
+		$Edit.set_item_text(1, redo_text)
+		
 	else:
 		$File.set_item_disabled(1, true)
 		$Edit.set_item_disabled(0, true)
