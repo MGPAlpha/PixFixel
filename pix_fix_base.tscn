@@ -47,6 +47,19 @@ item_0/text = "Undo"
 item_1/text = "Redo"
 item_1/id = 1
 
+[node name="View" type="PopupMenu" parent="Main Window/VBoxContainer/MenuBar"]
+auto_translate_mode = 1
+item_count = 5
+item_0/text = "Zoom"
+item_0/separator = true
+item_1/text = "Zoom In"
+item_2/text = "Zoom Out"
+item_2/id = 1
+item_3/text = "Zoom To Fit"
+item_3/id = 2
+item_4/text = "Zoom 100%"
+item_4/id = 3
+
 [node name="OpenDialog" type="FileDialog" parent="Main Window/VBoxContainer/MenuBar"]
 title = "Open a File"
 initial_position = 2

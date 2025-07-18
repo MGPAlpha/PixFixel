@@ -20,13 +20,18 @@ func link_to_document(doc: PFDocument) -> void:
 	document.edited.connect(_on_document_edited)
 	texture = ImageTexture.create_from_image(document.image)
 	canvas_sprite.texture = texture
-	zoom_to_fit()
+	zoom_to_fit()	
 	
 func zoom_to_fit() -> void:
 	scene_camera.position = Vector2.ZERO
 	var zoom = min(float(viewport.size.y) / float(document.image.get_height()), float(viewport.size.x) / float(document.image.get_width()))
 	scene_camera.zoom = Vector2(zoom, zoom)
 	
+func incremental_zoom(amount: float) -> void:
+	var cam_zoom = scene_camera.zoom.y
+	cam_zoom = cam_zoom * amount
+	scene_camera.zoom = Vector2(cam_zoom, cam_zoom)
+
 func incremental_zoom_toward(amount: float, toward: Vector2) -> void:
 	var cam_zoom = scene_camera.zoom.y
 	cam_zoom = cam_zoom * amount

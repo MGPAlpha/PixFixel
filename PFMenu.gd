@@ -5,11 +5,16 @@ extends MenuBar
 
 var last_open_path: String
 
+@onready var file = $File
+@onready var edit = $Edit
+@onready var view = $View
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 	$File.id_pressed.connect(on_file_menu_select)
 	$Edit.id_pressed.connect(on_edit_menu_select)
+	view.id_pressed.connect(on_view_menu_select)
 	
 	var config = ConfigFile.new()
 	var err = config.load("user://file_config.cfg")
@@ -70,6 +75,17 @@ func on_edit_menu_select(id: int):
 			_on_undo()
 		1: #Redo
 			_on_redo()
+
+func on_view_menu_select(id: int):
+	match(id):
+		0:
+			print("Zoom innnn")
+		1:
+			print("Zoom outttt")
+		2:
+			print("Zoom to fit")
+		3:
+			print("Zoom 100%")
 
 func on_open():
 	open_dialog.visible = true
