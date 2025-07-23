@@ -183,3 +183,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_undo"):
 		_on_undo()
 		accept_event()
+	elif event is InputEventKey && event.pressed:
+		event = event as InputEventKey
+		var keycode_with_modifiers = event.get_keycode_with_modifiers()
+		if keycode_with_modifiers == KEY_MASK_CTRL | KEY_EQUAL || keycode_with_modifiers == KEY_MASK_CTRL | KEY_KP_ADD:
+			_on_zoom_menu_select(ZoomMenu.ZoomIn)
+			accept_event()
+		elif keycode_with_modifiers == KEY_MASK_CTRL | KEY_KP_SUBTRACT:
+			_on_zoom_menu_select(ZoomMenu.ZoomOut)
+			accept_event()
