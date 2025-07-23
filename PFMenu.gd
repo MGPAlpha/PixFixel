@@ -9,6 +9,14 @@ var last_open_path: String
 @onready var edit = $Edit
 @onready var view = $View
 
+enum ZoomMenu {
+	ZoomIn,
+	ZoomOut,
+	ZoomToFit,
+	Zoom100
+}
+	
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -22,6 +30,18 @@ func _ready() -> void:
 	if err == OK:
 		last_open_path = config.get_value("file_config", "last_open_path")
 		open_dialog.current_path = last_open_path
+	
+	var zoom = PopupMenu.new()
+	
+	zoom.add_item("Zoom In", ZoomMenu.ZoomIn)
+	zoom.set_item_accelerator(ZoomMenu.ZoomIn, KEY_MASK_CTRL | KEY_PLUS)
+	zoom.add_item("Zoom Out", ZoomMenu.ZoomOut)
+	zoom.set_item_accelerator(ZoomMenu.ZoomOut, KEY_MASK_CTRL | KEY_MINUS)
+	zoom.add_item("Zoom To Fit", ZoomMenu.ZoomToFit)
+	zoom.add_item("Zoom 100%", ZoomMenu.Zoom100)
+	
+	zoom.id_pressed.connect(_on_zoom_menu_select)
+	view.add_submenu_node_item("Zoom", zoom)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,15 +97,25 @@ func on_edit_menu_select(id: int):
 			_on_redo()
 
 func on_view_menu_select(id: int):
+	pass
+
+func _on_zoom_menu_select(id: int):
+	var current_tab = TabDisplay.get_singleton().current_tab
+	var editor = current_tab.control as EditorWindow
 	match(id):
-		0:
-			print("Zoom innnn")
-		1:
-			print("Zoom outttt")
-		2:
-			print("Zoom to fit")
-		3:
-			print("Zoom 100%")
+		ZoomMenu.ZoomIn:
+			if editor:
+				editor.incremental_zoom(1.2)
+		ZoomMenu.ZoomOut:
+			if editor:
+				editor.incremental_zoom(.8)
+		ZoomMenu.ZoomToFit:
+			if editor:
+				editor.zoom_to_fit()
+		ZoomMenu.Zoom100:
+			if editor:
+				editor.zoom_absolute(1)
+			
 
 func on_open():
 	open_dialog.visible = true

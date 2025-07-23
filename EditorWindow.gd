@@ -27,6 +27,9 @@ func zoom_to_fit() -> void:
 	var zoom = min(float(viewport.size.y) / float(document.image.get_height()), float(viewport.size.x) / float(document.image.get_width()))
 	scene_camera.zoom = Vector2(zoom, zoom)
 	
+func zoom_absolute(zoom: float) -> void:
+	scene_camera.zoom = Vector2(zoom, zoom)
+	
 func incremental_zoom(amount: float) -> void:
 	var cam_zoom = scene_camera.zoom.y
 	cam_zoom = cam_zoom * amount
