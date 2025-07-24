@@ -35,8 +35,21 @@ text = "Height"
 [node name="HeightBox" type="SpinBox" parent="Resolution Controls/Height Container"]
 layout_mode = 2
 
+[node name="Aspect Ratio Container" type="HBoxContainer" parent="Resolution Controls"]
+layout_mode = 2
+
+[node name="AspectRatioToggle" type="CheckBox" parent="Resolution Controls/Aspect Ratio Container"]
+layout_mode = 2
+
+[node name="AspectRatio" type="Label" parent="Resolution Controls/Aspect Ratio Container"]
+layout_mode = 2
+text = "Lock Aspect Ratio"
+
 [node name="Confirm Button" type="Button" parent="."]
 layout_mode = 2
 text = "Confirm Downscale"
 
+[connection signal="value_changed" from="Resolution Controls/Width Container/WidthBox" to="." method="_update_from_width_edit" unbinds=1]
+[connection signal="value_changed" from="Resolution Controls/Height Container/HeightBox" to="." method="_update_from_height_edit" unbinds=1]
+[connection signal="toggled" from="Resolution Controls/Aspect Ratio Container/AspectRatioToggle" to="." method="_aspect_lock_toggled" unbinds=1]
 [connection signal="pressed" from="Confirm Button" to="." method="_confirm_downscale"]
