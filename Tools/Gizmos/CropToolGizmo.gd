@@ -6,6 +6,7 @@ signal top_adjusted(pos: int)
 signal right_adjusted(pos: int)
 signal bottom_adjusted(pos: int)
 signal left_adjusted(pos: int)
+signal center_adjusted(pos: Vector2)
 signal adjustment_complete
 
 var curr_image: Image = null
@@ -35,8 +36,9 @@ var left = DragHandle.new(false, false, false, true)
 
 var corners : Array[DragHandle] = [top_right, bottom_right, bottom_left, top_left]
 var sides : Array[DragHandle] = [right, bottom, left, top]
+var center: DragHandle = DragHandle.new(false, false, false, false)
 
-var drag_handles: Array[DragHandle] = [top_right, bottom_right, bottom_left, top_left, top, bottom, left, right]
+var drag_handles: Array[DragHandle] = [top_right, bottom_right, bottom_left, top_left, top, bottom, left, right, center]
 
 var dragging: bool = false
 var curr_handle: DragHandle = null
@@ -62,16 +64,18 @@ func _draw() -> void:
 	draw_circle(sides[3].position, 5/size_factor, Color.ORANGE)
 	draw_circle(sides[2].position, 5/size_factor, Color.ORANGE)
 	
-func update_positions(top: int, left: int, right: int, bottom: int, img: Image):
+	draw_circle(center.position, 5/size_factor, Color.ORANGE)
+	
+func update_positions(new_top: int, new_left: int, new_right: int, new_bottom: int, img: Image):
 	curr_image = img
 	var width = float(img.get_width())
 	var height = float(img.get_height())
 	while corners.size() < 4:
 		corners.append(Vector2.ZERO)
-	corners[0].position = Vector2(width/2-right, -height/2+top)
-	corners[1].position = Vector2(width/2-right, height/2-bottom)
-	corners[2].position = Vector2(-width/2+left, height/2-bottom)
-	corners[3].position = Vector2(-width/2+left, -height/2+top)
+	corners[0].position = Vector2(width/2-new_right, -height/2+new_top)
+	corners[1].position = Vector2(width/2-new_right, height/2-new_bottom)
+	corners[2].position = Vector2(-width/2+new_left, height/2-new_bottom)
+	corners[3].position = Vector2(-width/2+new_left, -height/2+new_top)
 	
 	while sides.size() < 4:
 		sides.append(Vector2.ZERO)
@@ -79,6 +83,8 @@ func update_positions(top: int, left: int, right: int, bottom: int, img: Image):
 	sides[1].position = (corners[1].position+corners[2].position)/2
 	sides[2].position = (corners[2].position+corners[3].position)/2
 	sides[3].position = (corners[3].position+corners[0].position)/2
+	
+	center.position = Vector2((left.position.x + right.position.x)/2,(top.position.y + bottom.position.y)/2)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -100,6 +106,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and dragging:
 		if curr_handle:
 			var world_pos = get_viewport().get_camera_2d().get_canvas_transform().affine_inverse() * event.position
+			if curr_handle == center:
+				var new_center = world_pos + curr_image.get_size()/2.0
+				center_adjusted.emit(new_center)
 			if curr_handle.adjust_top:
 				var new_top = round(world_pos.y + curr_image.get_height()/2)
 				top_adjusted.emit(new_top)

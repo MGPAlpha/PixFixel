@@ -47,6 +47,7 @@ func reset_tool():
 		crop_gizmo.right_adjusted.connect(_adjust_right)
 		crop_gizmo.bottom_adjusted.connect(_adjust_bottom)
 		crop_gizmo.left_adjusted.connect(_adjust_left)
+		crop_gizmo.center_adjusted.connect(_adjust_center)
 		crop_gizmo.adjustment_complete.connect(_update_entry_display)
 		print("no gizmo existed")
 	elif current_document && crop_gizmo:
@@ -96,7 +97,25 @@ func _adjust_bottom(val: int):
 func _adjust_left(val: int):
 	val = clamp(val, 0, current_document.image.get_width() - crop_right)
 	crop_left = val
-		
+
+func _adjust_center(val: Vector2):
+	var doc_size = current_document.image.get_size()
+	var curr_size = doc_size - Vector2i(crop_left + crop_right, crop_top + crop_bottom)
+	var half_size = curr_size/2.0
+	val = val.clamp(half_size, Vector2(doc_size) - half_size)
+	if curr_size.x % 2 == 0:
+		val.x = round(val.x)
+	else:
+		val.x = round(val.x+.5)-.5
+	if curr_size.y % 2 == 0:
+		val.y = round(val.y)
+	else:
+		val.y = round(val.y+.5)-.5
+	crop_top = val.y - half_size.y
+	crop_right = doc_size.x - val.x - half_size.x
+	crop_bottom = doc_size.y - val.y - half_size.y
+	crop_left = val.x - half_size.x
+
 func _update_entry_display():
 	var img_width = 0
 	var img_height = 0
