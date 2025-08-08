@@ -7,13 +7,19 @@ var texture: ImageTexture
 @onready var scene_camera = $SubViewport/Camera2D
 @onready var viewport = $SubViewport
 
+@export var key_pan_speed = 10
+
 signal edited(editor: EditorWindow)
 
 var _pan_dragging = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	#focus_neighbor_top = get_path_to(self)
+	#focus_neighbor_right = get_path_to(self)
+	#focus_neighbor_bottom = get_path_to(self)
+	#focus_neighbor_left = get_path_to(self)
+	pass
 
 func link_to_document(doc: PFDocument) -> void:
 	document = doc
@@ -68,10 +74,27 @@ func _gui_input(event: InputEvent) -> void:
 				_pan_dragging = true
 			else:
 				_pan_dragging = false
+		get_viewport().set_input_as_handled()
 			
 	if event is InputEventMouseMotion:
 		if _pan_dragging:
 			pan_camera(event.relative)
+			get_viewport().set_input_as_handled()
 
+	if event is InputEventKey:
+		if event.is_pressed():
+			if event.keycode == KEY_UP:
+				pan_camera(Vector2(0, -key_pan_speed))
+				accept_event()
+			elif event.keycode == KEY_RIGHT:
+				pan_camera(Vector2(key_pan_speed, 0))
+				accept_event()
+			elif event.keycode == KEY_DOWN:
+				pan_camera(Vector2(0, key_pan_speed))
+				accept_event()
+			elif event.keycode == KEY_LEFT:
+				pan_camera(Vector2(-key_pan_speed, 0))
+				accept_event()
+			
 #func _input(event):
 	
