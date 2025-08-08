@@ -7,7 +7,9 @@ signal right_adjusted(pos: int)
 signal bottom_adjusted(pos: int)
 signal left_adjusted(pos: int)
 signal center_adjusted(pos: Vector2)
-signal adjustment_complete
+signal adjustment_complete(aspect_lock: bool)
+signal gizmo_selected
+signal gizmo_released
 
 var curr_image: Image = null
 
@@ -41,6 +43,7 @@ var center: DragHandle = DragHandle.new(false, false, false, false)
 var drag_handles: Array[DragHandle] = [top_right, bottom_right, bottom_left, top_left, top, bottom, left, right, center]
 
 var dragging: bool = false
+var aspect_lock: bool = false
 var curr_handle: DragHandle = null
 
 func _process(delta: float) -> void:
@@ -101,6 +104,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					dragging = false
 					curr_handle = null
 					print("released")
+					gizmo_released.emit()
 					get_viewport().set_input_as_handled()
 					
 	if event is InputEventMouseMotion and dragging:
@@ -121,8 +125,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			if curr_handle.adjust_left:
 				var new_left = round(world_pos.x + curr_image.get_width()/2)
 				left_adjusted.emit(new_left)
-			adjustment_complete.emit()
+			adjustment_complete.emit(aspect_lock)
 			get_viewport().set_input_as_handled()
+			
+	if event is InputEventKey:
+		if event.keycode == KEY_SHIFT:
+			aspect_lock = event.pressed
 
 
 func _find_drag_handle_in_range(screen_pos: Vector2) -> int:

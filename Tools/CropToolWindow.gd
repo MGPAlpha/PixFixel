@@ -16,6 +16,11 @@ var crop_left: int = 0
 var crop_right: int = 0
 var crop_bottom: int = 0
 
+var adj_top: int = -1
+var adj_right: int = -1
+var adj_bottom: int = -1
+var adj_left: int = -1
+
 var aspect_lock: bool
 var aspect: float
 
@@ -57,7 +62,8 @@ func reset_tool():
 		crop_gizmo.bottom_adjusted.connect(_adjust_bottom)
 		crop_gizmo.left_adjusted.connect(_adjust_left)
 		crop_gizmo.center_adjusted.connect(_adjust_center)
-		crop_gizmo.adjustment_complete.connect(_update_entry_display)
+		crop_gizmo.adjustment_complete.connect(_adjustment_complete)
+		crop_gizmo.gizmo_released.connect(_update_aspect)
 		print("no gizmo existed")
 	elif current_document && crop_gizmo:
 		crop_gizmo.reparent(current_editor.viewport)
@@ -125,6 +131,8 @@ func _update_from_size_edit(width: int, height: int):
 		img_height = current_document.image.get_height()
 	crop_right = img_width - crop_left - width
 	crop_bottom = img_height - crop_top - height
+	if !aspect_lock:
+		_update_aspect()
 	_update_entry_display()
 
 func _update_from_margin_edit():
@@ -137,19 +145,72 @@ func _update_from_margin_edit():
 	
 func _adjust_top(val: int):
 	val = clamp(val, 0, current_document.image.get_height() - crop_bottom)
-	crop_top = val
+	adj_top = val
 	
 func _adjust_right(val: int):
 	val = clamp(val, 0, current_document.image.get_width() - crop_left)
-	crop_right = val
+	adj_right = val
 	
 func _adjust_bottom(val: int):
 	val = clamp(val, 0, current_document.image.get_height() - crop_top)
-	crop_bottom = val
+	adj_bottom = val
 	
 func _adjust_left(val: int):
 	val = clamp(val, 0, current_document.image.get_width() - crop_right)
-	crop_left = val
+	adj_left = val
+	
+func _adjustment_complete(as_lock: bool):
+	if (as_lock):
+		if ((adj_top > -1) != (adj_bottom > -1)) and ((adj_left > -1) != (adj_right > -1)): # condition for a vertical and horizontal movement
+			var img_width = current_document.image.get_width()
+			var img_height = current_document.image.get_height()
+			var potential_width = img_width - (adj_left if adj_left > -1 else crop_left) - (adj_right if adj_right > -1 else crop_right)
+			var potential_height = img_height - (adj_top if adj_top > -1 else crop_top) - (adj_bottom if adj_bottom > -1 else crop_bottom)
+			
+			var potential_aspect = float(potential_width)/potential_height
+			
+			if potential_aspect > aspect: #height too small
+				potential_height = int(potential_width / aspect)
+			elif potential_aspect < aspect: #width too small
+				potential_width = int(potential_height * aspect)
+				
+			if (adj_top > -1):
+				adj_top = img_height - crop_bottom - potential_height
+				adj_top = max(adj_top, 0)
+			if (adj_bottom > -1):
+				adj_bottom = img_height - crop_top - potential_height
+				adj_bottom = max(adj_bottom, 0)
+			if (adj_right > -1):
+				adj_right = img_width - crop_left - potential_width
+				adj_right = max(adj_right, 0)
+			if (adj_left > -1):
+				adj_left = img_width - crop_right - potential_width
+				adj_left = max(adj_left, 0)
+				
+			_apply_adjustments()
+			
+			print("doing aspect lock")
+				
+		else:
+			_apply_adjustments()
+	else:
+		_apply_adjustments()
+	_update_entry_display()
+	
+func _apply_adjustments():
+	if (adj_top > -1):
+		crop_top = adj_top
+	if (adj_right > -1):
+		crop_right = adj_right
+	if (adj_bottom > -1):
+		crop_bottom = adj_bottom
+	if (adj_left > -1):
+		crop_left = adj_left
+		
+	adj_top = -1
+	adj_right = -1
+	adj_bottom = -1
+	adj_left = -1
 
 func _adjust_center(val: Vector2):
 	var doc_size = current_document.image.get_size()
@@ -168,6 +229,13 @@ func _adjust_center(val: Vector2):
 	crop_right = doc_size.x - val.x - half_size.x
 	crop_bottom = doc_size.y - val.y - half_size.y
 	crop_left = val.x - half_size.x
+
+func _gizmo_drag_started():
+	_update_aspect()
+	adj_top = -1
+	adj_right = -1
+	adj_bottom = -1
+	adj_left = -1
 
 func _update_entry_display():
 	var img_width = 0
