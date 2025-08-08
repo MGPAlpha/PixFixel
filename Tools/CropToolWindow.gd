@@ -2,6 +2,7 @@ class_name CropToolWindow extends ToolWindowBase
 
 @onready var width_box = $"Size Controls/WidthContainer/WidthBox"
 @onready var height_box = $"Size Controls/HeightContainer/HeightBox"
+@onready var aspect_toggle = $"Size Controls/Aspect Ratio Container/AspectRatioToggle"
 @onready var top_box = $"Margin Controls/TopContainer/TopBox"
 @onready var left_box = $"Margin Controls/LeftContainer/LeftBox"
 @onready var right_box = $"Margin Controls/RightContainer/RightBox"
@@ -14,6 +15,9 @@ var crop_top: int = 0
 var crop_left: int = 0
 var crop_right: int = 0
 var crop_bottom: int = 0
+
+var aspect_lock: bool
+var aspect: float
 
 var crop_gizmo: CropToolGizmo
 
@@ -35,6 +39,11 @@ func reset_tool():
 	crop_left = 0
 	crop_right = 0
 	crop_bottom = 0
+
+	aspect = 1
+	aspect_lock = false
+
+	_update_aspect()
 	
 	print("current doc: ", current_document)
 	print("crop gizmo: ", crop_gizmo)
@@ -65,14 +74,57 @@ func on_tool_hide():
 		crop_gizmo.queue_free()
 		crop_gizmo = null
 
-func _update_from_size_edit():
+func _update_aspect():
+	var img_width = 1
+	var img_height = 1
+	if current_document:
+		img_width = current_document.image.get_width()
+		img_height = current_document.image.get_height()
+	var width = img_width - crop_left - crop_right
+	var height = img_height - crop_top - crop_bottom
+	aspect = float(width)/height
+
+func _aspect_lock_toggled():
+	aspect_lock = aspect_toggle.button_pressed
+	if aspect_lock:
+		_update_aspect()
+
+func _update_from_width_edit():
+	if aspect_lock:
+		var img_width = current_document.image.get_width()
+		var img_height = current_document.image.get_height()
+		
+		var new_width = width_box.value
+		var new_height = int(new_width / aspect)
+		
+		if new_height > img_height - crop_top:
+			new_height = img_height - crop_top
+		_update_from_size_edit(new_width, new_height)
+	else:
+		_update_from_size_edit(width_box.value, height_box.value)
+	
+func _update_from_height_edit():
+	if aspect_lock:
+		var img_width = current_document.image.get_width()
+		var img_height = current_document.image.get_height()
+		
+		var new_height = height_box.value
+		var new_width = int(new_height * aspect)
+		
+		if new_width > img_width - crop_left:
+			new_width = img_width - crop_left
+		_update_from_size_edit(new_width, new_height)
+	else:
+		_update_from_size_edit(width_box.value, height_box.value)
+
+func _update_from_size_edit(width: int, height: int):
 	var img_width = 0
 	var img_height = 0
 	if current_document:
 		img_width = current_document.image.get_width()
 		img_height = current_document.image.get_height()
-	crop_right = img_width - crop_left - width_box.value
-	crop_bottom = img_height - crop_top - height_box.value
+	crop_right = img_width - crop_left - width
+	crop_bottom = img_height - crop_top - height
 	_update_entry_display()
 
 func _update_from_margin_edit():
@@ -80,6 +132,7 @@ func _update_from_margin_edit():
 	crop_left = left_box.value
 	crop_right = right_box.value
 	crop_bottom = bottom_box.value
+	_update_aspect()
 	_update_entry_display()
 	
 func _adjust_top(val: int):

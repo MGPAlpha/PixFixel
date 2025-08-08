@@ -39,6 +39,16 @@ text = "Height:"
 [node name="HeightBox" type="SpinBox" parent="Size Controls/HeightContainer"]
 layout_mode = 2
 
+[node name="Aspect Ratio Container" type="HBoxContainer" parent="Size Controls"]
+layout_mode = 2
+
+[node name="AspectRatioToggle" type="CheckBox" parent="Size Controls/Aspect Ratio Container"]
+layout_mode = 2
+
+[node name="AspectRatio" type="Label" parent="Size Controls/Aspect Ratio Container"]
+layout_mode = 2
+text = "Lock Aspect Ratio"
+
 [node name="Margins" type="Label" parent="."]
 layout_mode = 2
 text = "Margins
@@ -109,8 +119,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Confirm Crop"
 
-[connection signal="value_changed" from="Size Controls/WidthContainer/WidthBox" to="." method="_update_from_size_edit" unbinds=1]
-[connection signal="value_changed" from="Size Controls/HeightContainer/HeightBox" to="." method="_update_from_size_edit" unbinds=1]
+[connection signal="value_changed" from="Size Controls/WidthContainer/WidthBox" to="." method="_update_from_width_edit" unbinds=1]
+[connection signal="value_changed" from="Size Controls/HeightContainer/HeightBox" to="." method="_update_from_height_edit" unbinds=1]
+[connection signal="toggled" from="Size Controls/Aspect Ratio Container/AspectRatioToggle" to="." method="_aspect_lock_toggled" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/TopContainer/TopBox" to="." method="_update_from_margin_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/LeftContainer/LeftBox" to="." method="_update_from_margin_edit" unbinds=1]
 [connection signal="value_changed" from="Margin Controls/RightContainer/RightBox" to="." method="_update_from_margin_edit" unbinds=1]
