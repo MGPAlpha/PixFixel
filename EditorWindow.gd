@@ -6,6 +6,7 @@ var texture: ImageTexture
 @onready var canvas_sprite = $SubViewport/Sprite2D
 @onready var scene_camera = $SubViewport/Camera2D
 @onready var viewport = $SubViewport
+@onready var pixel_grid = $SubViewport/PixelGrid
 
 @export var key_pan_speed = 10
 
@@ -26,6 +27,7 @@ func link_to_document(doc: PFDocument) -> void:
 	document.edited.connect(_on_document_edited)
 	texture = ImageTexture.create_from_image(document.image)
 	canvas_sprite.texture = texture
+	pixel_grid.document = doc
 	zoom_to_fit()	
 	
 func zoom_to_fit() -> void:
