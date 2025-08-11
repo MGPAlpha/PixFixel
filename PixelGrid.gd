@@ -37,7 +37,8 @@ func _draw() -> void:
 	
 	var min_line_spacing_world = transform.basis_xform(Vector2(min_line_spacing_screen, 0)).length()
 	var spacing_world = pow(spacing_factor, ceil(log(min_line_spacing_world)/log(spacing_factor)))
-	
+	if spacing_world == 1 and !allow_single_pixel:
+		spacing_world = spacing_factor
 	
 	#Vertical Lines
 	var starting_x = ceil((min_world_pos.x - origin.x)/spacing_world)*spacing_world+origin.x
