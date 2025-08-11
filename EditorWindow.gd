@@ -69,14 +69,16 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			incremental_zoom_toward(1.03, event.position)
+			get_viewport().set_input_as_handled()
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			incremental_zoom_toward(0.97, event.position)
+			get_viewport().set_input_as_handled()
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed:
 				_pan_dragging = true
 			else:
 				_pan_dragging = false
-		get_viewport().set_input_as_handled()
+			get_viewport().set_input_as_handled()
 			
 	if event is InputEventMouseMotion:
 		if _pan_dragging:
