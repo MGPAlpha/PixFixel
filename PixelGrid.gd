@@ -4,6 +4,7 @@ var viewport: Viewport
 var camera: Camera2D
 var document: PFDocument
 
+@export var show_grid: bool = true
 @export var spacing_factor: int = 8
 @export var min_line_spacing_screen: int = 25
 @export var allow_single_pixel: bool = false
@@ -33,7 +34,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	queue_redraw()
+	if show_grid:
+		visible = true
+		queue_redraw()
+	else:
+		visible = false
 
 func recalculate_origin():
 	var img_size = document.image.get_size()

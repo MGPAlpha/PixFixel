@@ -10,6 +10,8 @@ var edit: PopupMenu
 
 var view: PopupMenu
 var zoom: PopupMenu
+var grid_size: PopupMenu
+var grid_origin: PopupMenu
 
 enum FileMenu {
 	Open,
@@ -22,7 +24,11 @@ enum EditMenu {
 }
 
 enum ViewMenu {
-	ZoomSubmenu
+	ZoomSubmenu,
+	GridSeparator,
+	ShowGrid,
+	GridSizeSubmenu,
+	GridOriginSubmenu
 }
 
 enum ZoomMenu {
@@ -30,6 +36,13 @@ enum ZoomMenu {
 	ZoomOut,
 	ZoomToFit,
 	Zoom100
+}
+
+enum GridSizeMenu {
+	Grid4,
+	Grid8,
+	Grid10,
+	Grid16
 }
 
 func _build_file_menu():
@@ -61,6 +74,15 @@ func _build_view_menu():
 	var zoom_menu = _build_zoom_menu()
 	view.add_submenu_node_item("Zoom", zoom_menu, ViewMenu.ZoomSubmenu)
 	
+	view.add_separator("Grid", ViewMenu.GridSeparator)
+	view.add_check_item("Show Grid", ViewMenu.ShowGrid)
+	
+	var grid_size_menu = _build_grid_size_menu()
+	view.add_submenu_node_item("Grid Size", grid_size_menu, ViewMenu.GridSizeSubmenu)
+	
+	var grid_origin_menu = _build_grid_origin_menu()
+	view.add_submenu_node_item("Grid Origin", grid_origin_menu, ViewMenu.GridOriginSubmenu)
+	
 	view.id_pressed.connect(_on_view_menu_select)
 	
 	return view
@@ -76,6 +98,35 @@ func _build_zoom_menu():
 	zoom.id_pressed.connect(_on_zoom_menu_select)
 	
 	return zoom
+	
+func _build_grid_size_menu():
+	grid_size = PopupMenu.new()
+	
+	grid_size.add_radio_check_item("4x4", GridSizeMenu.Grid4)
+	grid_size.add_radio_check_item("8x8", GridSizeMenu.Grid8)
+	grid_size.add_radio_check_item("10x10", GridSizeMenu.Grid10)
+	grid_size.add_radio_check_item("16x16", GridSizeMenu.Grid16)
+	
+	grid_size.id_pressed.connect(_on_grid_size_menu_select)
+	
+	return grid_size
+
+func _build_grid_origin_menu():
+	grid_origin = PopupMenu.new()
+	
+	grid_origin.add_radio_check_item("Center", PixelGrid.OriginMode.Center)
+	grid_origin.add_radio_check_item("Top", PixelGrid.OriginMode.Top)
+	grid_origin.add_radio_check_item("Top Right", PixelGrid.OriginMode.TopRight)
+	grid_origin.add_radio_check_item("Right", PixelGrid.OriginMode.Right)
+	grid_origin.add_radio_check_item("Bottom Right", PixelGrid.OriginMode.BottomRight)
+	grid_origin.add_radio_check_item("Bottom", PixelGrid.OriginMode.Bottom)
+	grid_origin.add_radio_check_item("Bottom Left", PixelGrid.OriginMode.BottomLeft)
+	grid_origin.add_radio_check_item("Left", PixelGrid.OriginMode.Left)
+	grid_origin.add_radio_check_item("Top Left", PixelGrid.OriginMode.TopLeft)
+	
+	grid_origin.id_pressed.connect(_on_grid_origin_menu_select)
+	
+	return grid_origin
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -128,11 +179,36 @@ func _update_menus():
 		
 		view.set_item_disabled(ViewMenu.ZoomSubmenu, false)
 		
+		view.set_item_disabled(ViewMenu.ShowGrid, false)
+		view.set_item_checked(ViewMenu.ShowGrid, editor.pixel_grid.show_grid)
+		
+		view.set_item_disabled(ViewMenu.GridSizeSubmenu, false)
+		var grid_size = editor.pixel_grid.spacing_factor
+		_update_grid_size_menu(grid_size)
+		view.set_item_disabled(ViewMenu.GridOriginSubmenu, false)
+		_update_grid_origin_menu(editor.pixel_grid.origin_mode)
+		
 	else:
 		file.set_item_disabled(FileMenu.SaveAs, true)
+		
 		edit.set_item_disabled(EditMenu.Undo, true)
 		edit.set_item_disabled(EditMenu.Redo, true)
+		
+		view.set_item_disabled(ViewMenu.ShowGrid, true)
+		view.set_item_disabled(ViewMenu.GridSizeSubmenu, true)
+		view.set_item_disabled(ViewMenu.GridOriginSubmenu, true)
 		view.set_item_disabled(ViewMenu.ZoomSubmenu, true)
+		
+func _update_grid_size_menu(curr_size: int):
+	grid_size.set_item_checked(GridSizeMenu.Grid4, curr_size == 4)
+	grid_size.set_item_checked(GridSizeMenu.Grid8, curr_size == 8)
+	grid_size.set_item_checked(GridSizeMenu.Grid10, curr_size == 10)
+	grid_size.set_item_checked(GridSizeMenu.Grid16, curr_size == 16)
+	
+func _update_grid_origin_menu(curr_mode: PixelGrid.OriginMode):
+	for index in PixelGrid.OriginMode:
+		grid_origin.set_item_checked(PixelGrid.OriginMode[index], false)
+	grid_origin.set_item_checked(curr_mode, true)
 
 func _on_file_menu_select(id: int):
 	match(id):
@@ -149,11 +225,18 @@ func _on_edit_menu_select(id: int):
 			_on_redo()
 
 func _on_view_menu_select(id: int):
-	pass
+	var current_tab = TabDisplay.get_singleton().current_tab
+	var editor = current_tab.control as EditorWindow
+	match id:
+		ViewMenu.ShowGrid:
+			if !editor: return
+			editor.pixel_grid.show_grid = !editor.pixel_grid.show_grid
+			view.set_item_checked(ViewMenu.ShowGrid, editor.pixel_grid.show_grid)
 
 func _on_zoom_menu_select(id: int):
 	var current_tab = TabDisplay.get_singleton().current_tab
 	var editor = current_tab.control as EditorWindow
+	if !editor: return
 	match(id):
 		ZoomMenu.ZoomIn:
 			if editor:
@@ -168,6 +251,27 @@ func _on_zoom_menu_select(id: int):
 			if editor:
 				editor.zoom_absolute(1)
 			
+func _on_grid_size_menu_select(id: int):
+	var current_tab = TabDisplay.get_singleton().current_tab
+	var editor = current_tab.control as EditorWindow
+	if !editor: return
+	match(id):
+		GridSizeMenu.Grid4:
+			editor.pixel_grid.spacing_factor = 4
+		GridSizeMenu.Grid8:
+			editor.pixel_grid.spacing_factor = 8
+		GridSizeMenu.Grid10:
+			editor.pixel_grid.spacing_factor = 10
+		GridSizeMenu.Grid16:
+			editor.pixel_grid.spacing_factor = 16
+	_update_grid_size_menu(editor.pixel_grid.spacing_factor)
+	
+func _on_grid_origin_menu_select(id: int):
+	var current_tab = TabDisplay.get_singleton().current_tab
+	var editor = current_tab.control as EditorWindow
+	if !editor: return
+	editor.pixel_grid.reset_origin_mode(id)
+	_update_grid_origin_menu(id)
 
 func on_open():
 	open_dialog.visible = true
