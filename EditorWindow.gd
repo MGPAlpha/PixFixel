@@ -28,6 +28,7 @@ func link_to_document(doc: PFDocument) -> void:
 	texture = ImageTexture.create_from_image(document.image)
 	canvas_sprite.texture = texture
 	pixel_grid.document = doc
+	pixel_grid.recalculate_origin()
 	zoom_to_fit()	
 	
 func zoom_to_fit() -> void:
@@ -63,6 +64,7 @@ func _process(delta: float) -> void:
 
 func _on_document_edited() -> void:
 	texture.set_image(document.image)
+	pixel_grid.recalculate_origin()
 	edited.emit(self)
 	
 func _gui_input(event: InputEvent) -> void:

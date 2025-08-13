@@ -1,4 +1,4 @@
-extends Node2D
+class_name PixelGrid extends Node2D
 
 var viewport: Viewport
 var camera: Camera2D
@@ -7,11 +7,24 @@ var document: PFDocument
 @export var spacing_factor: int = 8
 @export var min_line_spacing_screen: int = 25
 @export var allow_single_pixel: bool = false
+@export var origin_mode: OriginMode = OriginMode.Center
 @export var origin: Vector2 = Vector2.ZERO
 
 @export var axis_color: Color = Color.YELLOW
 @export var primary_grid_color: Color = Color.ORANGE
 @export var secondary_grid_color: Color = Color.TAN
+
+enum OriginMode {
+	Center,
+	Top,
+	TopRight,
+	Right,
+	BottomRight,
+	Bottom,
+	BottomLeft,
+	Left,
+	TopLeft
+}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,6 +34,28 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	queue_redraw()
+
+func recalculate_origin():
+	var img_size = document.image.get_size()
+	match origin_mode:
+		OriginMode.TopLeft, OriginMode.Left, OriginMode.BottomLeft:
+			origin.x = -img_size.x/2
+		OriginMode.TopRight, OriginMode.Right, OriginMode.BottomRight:
+			origin.x = img_size.x/2
+		OriginMode.Top, OriginMode.Center, OriginMode.Bottom:
+			origin.x = 0 if img_size.x % 2 == 0 else -.5
+	
+	match origin_mode:
+		OriginMode.TopLeft, OriginMode.Top, OriginMode.TopRight:
+			origin.y = -img_size.y/2
+		OriginMode.BottomLeft, OriginMode.Bottom, OriginMode.BottomRight:
+			origin.y = img_size.y/2
+		OriginMode.Left, OriginMode.Center, OriginMode.Right:
+			origin.y = 0 if img_size.y % 2 == 0 else -.5
+	
+func reset_origin_mode(mode: OriginMode):
+	origin_mode = mode
+	recalculate_origin()
 
 func _draw() -> void:
 	if !document: return
