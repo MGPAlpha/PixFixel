@@ -88,14 +88,14 @@ func _draw() -> void:
 	max_world_pos = max_world_pos.clamp(-document_size/2, document_size/2)
 	
 	var effective_origin = origin
-	var spacing_scaled = Vector2(spacing_factor, spacing_factor)
+	var spacing_scale = Vector2(1, 1)
 	if overriden:
 		effective_origin = origin_override
-		spacing_scaled = spacing_factor * spacing_scale_override
+		spacing_scale = Vector2.ONE * spacing_scale_override
 	
 	var min_line_spacing_world = transform.basis_xform(Vector2(min_line_spacing_screen, 0)).length()
-	var spacing_world_x = pow(spacing_factor, ceil(log(min_line_spacing_world/spacing_scaled.x)/log(spacing_factor)))*spacing_scaled.x
-	var spacing_world_y = pow(spacing_factor, ceil(log(min_line_spacing_world/spacing_scaled.y)/log(spacing_factor)))*spacing_scaled.y
+	var spacing_world_x = pow(spacing_factor, ceil(log(min_line_spacing_world/spacing_scale.x)/log(spacing_factor)))*spacing_scale.x
+	var spacing_world_y = pow(spacing_factor, ceil(log(min_line_spacing_world/spacing_scale.y)/log(spacing_factor)))*spacing_scale.y
 	var spacing_world = Vector2(spacing_world_x, spacing_world_y)
 	if overriden:
 		if spacing_world.x <= spacing_scale_override.x:
@@ -103,9 +103,9 @@ func _draw() -> void:
 		if spacing_world.y <= spacing_scale_override.y:
 			spacing_world.y = spacing_scale_override.y
 	else:
-		if spacing_world.x == 1 and !allow_single_pixel:
+		if spacing_world.x <= 1 and !allow_single_pixel:
 			spacing_world.x = spacing_factor
-		if spacing_world.y == 1 and !allow_single_pixel:
+		if spacing_world.y <= 1 and !allow_single_pixel:
 			spacing_world.y = spacing_factor
 		
 	#Vertical Lines
