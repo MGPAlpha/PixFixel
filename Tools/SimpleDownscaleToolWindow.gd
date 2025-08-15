@@ -11,6 +11,8 @@ var width: int
 var aspect_lock = true
 var aspect: float
 
+var overridden_grid: PixelGrid
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -23,6 +25,10 @@ func _process(delta: float) -> void:
 func reset_tool():
 	super.reset_tool()
 	
+	if overridden_grid:
+		overridden_grid.reset_override()
+		overridden_grid = null
+	
 	print("Resetting Simple Downscale Tool")
 	
 	width = 1
@@ -32,6 +38,7 @@ func reset_tool():
 	if current_document:
 		width = current_document.image.get_width()
 		height = current_document.image.get_height()
+		overridden_grid = current_editor.pixel_grid
 	
 	aspect = float(width)/height
 		
@@ -78,6 +85,10 @@ func _update_simple_tab():
 	width_box.set_value_no_signal(width)
 	height_box.set_value_no_signal(height)
 	
+	if overridden_grid:
+		var orig_size = current_document.image.get_size()
+		overridden_grid.override_grid(Vector2(float(orig_size.x) / width, float(orig_size.y) / height), -orig_size/2.0)
+	
 	if current_document:
 		confirm_button.disabled = false
 	else:
@@ -95,3 +106,9 @@ func _confirm_downscale():
 	current_editor.zoom_to_fit()
 	
 	reset_tool()
+
+func on_tool_hide():
+	super.on_tool_hide()
+	if overridden_grid:
+		overridden_grid.reset_override()
+		overridden_grid = null
