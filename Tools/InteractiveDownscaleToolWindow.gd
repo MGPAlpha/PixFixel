@@ -11,6 +11,10 @@ var known_pixel_displays: Array[InteractiveDownscalePixelDisplay]
 
 var interactive_downscale_gizmo: InteractiveDownscaleGizmo
 
+
+
+var overridden_grid: PixelGrid
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
@@ -21,12 +25,18 @@ func _process(delta: float) -> void:
 	
 func reset_tool() -> void:
 	super.reset_tool()
-	print("resetting crop tool")
 		
 	for display: InteractiveDownscalePixelDisplay in known_pixel_displays:
 		display.queue_free()
 	known_pixels.clear()
 	known_pixel_displays.clear()
+	
+	if overridden_grid:
+		overridden_grid.reset_override()
+		overridden_grid = null
+
+	if current_editor:
+		overridden_grid = current_editor.pixel_grid
 	
 	if current_document && !interactive_downscale_gizmo:
 		interactive_downscale_gizmo = interactive_downscale_gizmo_prefab.instantiate()
@@ -51,13 +61,25 @@ func reset_tool() -> void:
 func refresh_tool_ui():
 	if known_pixels.size() < 2:
 		confirm_button.disabled = true
+		if overridden_grid:
+			overridden_grid.reset_override()
 	else:
 		confirm_button.disabled = false
+		if overridden_grid and current_document:
+			var downscale = DownscaleTool.new()
+			var orig_size = Vector2(current_document.image.get_size())
+			var regression = downscale.linear_regression_from_known_pixels(known_pixels)
+			var scale = Vector2(regression["x"]["b"], regression["y"]["b"])
+			var origin = Vector2(downscale.eval_regression(regression["x"], .5), downscale.eval_regression(regression["y"], .5)) - orig_size/2
+			overridden_grid.override_grid(scale, origin)
 
 func on_tool_hide():
 	if interactive_downscale_gizmo:
 		interactive_downscale_gizmo.queue_free()
 		interactive_downscale_gizmo = null
+	if overridden_grid:
+		overridden_grid.reset_override()
+		overridden_grid = null
 
 func _add_known_pixel_at_pos(pos: Vector2) -> void:
 	var new_pixel = InteractiveDownscalePixel.new()
