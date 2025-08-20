@@ -7,6 +7,8 @@ var texture: ImageTexture
 @onready var scene_camera = $SubViewport/Camera2D
 @onready var viewport = $SubViewport
 @onready var pixel_grid = $SubViewport/PixelGrid
+@onready var ruler_x = $SubViewport/UIRulers/HorizonalRuler
+@onready var ruler_y = $SubViewport/UIRulers/VerticalRuler
 
 @export var key_pan_speed = 10
 
@@ -29,6 +31,11 @@ func link_to_document(doc: PFDocument) -> void:
 	canvas_sprite.texture = texture
 	pixel_grid.document = doc
 	pixel_grid.recalculate_origin()
+	ruler_x.document = doc
+	ruler_y.document = doc
+	ruler_x.camera = scene_camera
+	ruler_y.camera = scene_camera
+	
 	zoom_to_fit()	
 	
 func zoom_to_fit() -> void:

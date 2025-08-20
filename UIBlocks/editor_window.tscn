@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcj3tqbv0fetl"]
+[gd_scene load_steps=6 format=3 uid="uid://dcj3tqbv0fetl"]
 
 [ext_resource type="Script" path="res://EditorWindow.gd" id="1_un5d2"]
 [ext_resource type="Texture2D" uid="uid://whlxsf5wcbky" path="res://icon.svg" id="2_cos3o"]
 [ext_resource type="Script" path="res://PixelGrid.gd" id="3_55d2a"]
+[ext_resource type="Script" path="res://UIRuler.gd" id="4_pmny1"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ft750"]
 
@@ -30,3 +31,26 @@ texture = ExtResource("2_cos3o")
 
 [node name="PixelGrid" type="Node2D" parent="SubViewport"]
 script = ExtResource("3_55d2a")
+
+[node name="UIRulers" type="CanvasLayer" parent="SubViewport"]
+
+[node name="HorizonalRuler" type="Control" parent="SubViewport/UIRulers"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 25.0
+offset_bottom = 25.0
+grow_horizontal = 2
+script = ExtResource("4_pmny1")
+
+[node name="VerticalRuler" type="Control" parent="SubViewport/UIRulers"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 3
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 25.0
+offset_right = 25.0
+grow_vertical = 2
+script = ExtResource("4_pmny1")
+vertical = true
